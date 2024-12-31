@@ -115,7 +115,7 @@ local function QuestCheck()
 			Mon = "Bandit"
 			QuestName = "BanditQuest1"
 			QuestLevel = 1
-			NPCPosition = CFrame.new(1059.37195, 15.4495068, 1550.4231, 0.939700544, -0, -0.341998369, 0, 1, -0, 0.341998369, 0, 0.939700544)
+			NPCPosition = CFrame.new(1058.60962, 16.428524, 1548.02307, -0.940542698, 2.14076756e-09, 0.339675426, 4.03729272e-09, 1, 4.87665197e-09, -0.339675426, 5.95806871e-09, -0.940542698)
 		end
 		return {
 			[1] = QuestLevel,
