@@ -1,7 +1,7 @@
 -- Cấu hình
-local min_delay = 3  -- Độ trễ tối thiểu giữa các tin nhắn (giây)
-local max_delay = 8  -- Độ trễ tối đa giữa các tin nhắn (giây)
-local max_messages = 20 -- Số lần spam trước khi tự dừng
+local min_delay = 20 -- Độ trễ tối thiểu giữa các tin nhắn (giây)
+local max_delay = 50  -- Độ trễ tối đa giữa các tin nhắn (giây)
+local max_messages = 2 -- Số lần spam trước khi tự dừng
 
 -- Danh sách tin nhắn ngẫu nhiên để tránh bị phát hiện
 local messages = {
