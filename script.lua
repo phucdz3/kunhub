@@ -7,6 +7,8 @@ local rest_time = 700 -- Thời gian nghỉ trước khi tiếp tục spam (giâ
 -- Danh sách tin nhắn ngẫu nhiên để tránh bị phát hiện
 local messages = {
     "fruits cheap at saleroblox. n e t"
+    "acc bl gia re saleroblox. n e t"
+    "saleroblox. n e t acc bl gia re"
 }
 
 -- Hàm chọn tin nhắn ngẫu nhiên
