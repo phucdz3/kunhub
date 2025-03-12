@@ -1,38 +1,35 @@
--- Kiểm tra nếu getgenv() chưa có giá trị, đặt mặc định
-if not getgenv().Message then
-    getgenv().Message = {
-        "Default message 1",
-        "Default message 2"
-    }
-end
+-- Cấu hình
+local min_delay = 3  -- Độ trễ tối thiểu giữa các tin nhắn (giây)
+local max_delay = 10  -- Độ trễ tối đa giữa các tin nhắn (giây)
+local max_messages = 2 -- Số lần spam trước khi tạm dừng
+local rest_time = 700 -- Thời gian nghỉ trước khi tiếp tục spam (giây)
 
-if not getgenv().SoLan then getgenv().SoLan = 1 end
-if not getgenv().MinDelay then getgenv().MinDelay = 3 end
-if not getgenv().MaxDelay then getgenv().MaxDelay = 8 end
-if not getgenv().MaxMessages then getgenv().MaxMessages = 20 end
-if not getgenv().RestTime then getgenv().RestTime = 30 end
+-- Danh sách tin nhắn ngẫu nhiên để tránh bị phát hiện
+local messages = {
+    "fruits cheap at saleroblox. n e t"
+}
 
 -- Hàm chọn tin nhắn ngẫu nhiên
 function getRandomMessage()
-    return getgenv().Message[math.random(1, #getgenv().Message)]
+    return messages[math.random(1, #messages)]
 end
 
--- Hàm chọn thời gian ngẫu nhiên
+-- Hàm chọn thời gian chờ ngẫu nhiên
 function getRandomDelay()
-    return math.random(getgenv().MinDelay, getgenv().MaxDelay)
+    return math.random(min_delay, max_delay)
 end
 
 -- Bắt đầu vòng lặp spam chat với bảo vệ chống ban
 while true do
     local count = 0  -- Reset số lần spam mỗi vòng
 
-    while count < getgenv().MaxMessages do
+    while count < max_messages do
         wait(getRandomDelay()) -- Đợi thời gian ngẫu nhiên trước khi gửi
         game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(getRandomMessage(), "All")
         count = count + 1
     end
 
-    -- Sau khi đạt MaxMessages, nghỉ trong một khoảng thời gian trước khi tiếp tục
-    print("⏸️ Đang nghỉ " .. getgenv().RestTime .. " giây trước khi tiếp tục spam...")
-    wait(getgenv().RestTime)
+    -- Sau khi đạt max_messages, nghỉ trong một khoảng thời gian trước khi tiếp tục
+    print("⏸️ Đang nghỉ " .. rest_time .. " giây trước khi tiếp tục spam...")
+    wait(rest_time)
 end
