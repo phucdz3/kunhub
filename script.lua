@@ -1,17 +1,25 @@
--- Cấu hình
 local min_delay = 3  -- Độ trễ tối thiểu giữa các tin nhắn (giây)
 local max_delay = 10  -- Độ trễ tối đa giữa các tin nhắn (giây)
 local max_messages = 2 -- Số lần spam trước khi tạm dừng
-local rest_time = 200 -- Thời gian nghỉ trước khi tiếp tục spam (giây)
+local min_rest = 180  -- Thời gian nghỉ tối thiểu (giây)
+local max_rest = 300  -- Thời gian nghỉ tối đa (giây)
 
--- Danh sách tin nhắn ngẫu nhiên để tránh bị phát hiện
+-- Danh sách tin nhắn gửi theo thứ tự
 local messages = {
-    "fruits cheap at saleroblox. n e t"
+    "🎮 shop acc kitsune yeti leopard - saleroblox. n e t 🎮"
 }
 
--- Hàm chọn tin nhắn ngẫu nhiên
-function getRandomMessage()
-    return messages[math.random(1, #messages)]
+-- Biến đếm vị trí tin nhắn hiện tại
+local messageIndex = 1
+
+-- Hàm lấy tin nhắn theo thứ tự
+function getNextMessage()
+    local message = messages[messageIndex]
+    messageIndex = messageIndex + 1
+    if messageIndex > #messages then
+        messageIndex = 1  -- Quay lại tin nhắn đầu tiên khi hết danh sách
+    end
+    return message
 end
 
 -- Hàm chọn thời gian chờ ngẫu nhiên
@@ -19,17 +27,23 @@ function getRandomDelay()
     return math.random(min_delay, max_delay)
 end
 
+-- Hàm chọn thời gian nghỉ ngẫu nhiên
+function getRandomRest()
+    return math.random(min_rest, max_rest)
+end
+
 -- Bắt đầu vòng lặp spam chat với bảo vệ chống ban
 while true do
     local count = 0  -- Reset số lần spam mỗi vòng
 
     while count < max_messages do
-        wait(getRandomDelay()) -- Đợi thời gian ngẫu nhiên trước khi gửi
-        game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(getRandomMessage(), "All")
+        task.wait(getRandomDelay()) -- Đợi thời gian ngẫu nhiên trước khi gửi
+        game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(getNextMessage(), "All")
         count = count + 1
     end
 
     -- Sau khi đạt max_messages, nghỉ trong một khoảng thời gian trước khi tiếp tục
+    local rest_time = getRandomRest()
     print("⏸️ Đang nghỉ " .. rest_time .. " giây trước khi tiếp tục spam...")
-    wait(rest_time)
+    task.wait(rest_time)
 end
