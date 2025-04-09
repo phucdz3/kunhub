@@ -3,9 +3,20 @@ task.spawn(function()
 	local Players = game:GetService("Players")
 	local player = Players.LocalPlayer
 
-	-- Đợi module Buttons load
+	-- Module chứa logic nút
 	local ButtonsModule = require(ReplicatedStorage:WaitForChild("SharedModules"):WaitForChild("ButtonsModule"))
 
+	-- Hàm kiểm tra có đang ở khu AFK không (giả sử có giá trị trong leaderstats)
+	local function isInAfkZone()
+		local leaderstats = player:FindFirstChild("leaderstats")
+		if leaderstats then
+			local afk = leaderstats:FindFirstChild("AfkRewards")
+			return afk and afk.Value > 0 -- Ví dụ: nếu đã nhận reward thì đang trong AFK
+		end
+		return false
+	end
+
+	-- Hàm Join AFK
 	local function JoinAfk()
 		print("[⏳] Đang cố gắng vào khu AFK...")
 		local success, err = pcall(function()
@@ -19,9 +30,12 @@ task.spawn(function()
 		end
 	end
 
-	-- Lặp lại kiểm tra mỗi 10 giây
+	-- Kiểm tra định kỳ
 	while true do
-		JoinAfk()
+		if not isInAfkZone() then
+			print("[🔁] Bạn đã bị out khỏi AFK, đang tự động vào lại...")
+			JoinAfk()
+		end
 		task.wait(10)
 	end
 end)
