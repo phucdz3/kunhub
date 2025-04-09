@@ -1,41 +1,42 @@
--- ✅ Auto AFK Join Script - Fix lỗi require và coroutine khi chạy autoexec/loadstring
+-- ✅ Auto AFK Join Script - Cực kỳ an toàn cho autoexec / loadstring
 repeat task.wait() until game:IsLoaded()
 repeat task.wait() until game.Players.LocalPlayer
-
 local player = game.Players.LocalPlayer
 
--- Đợi PlayerGui & ReplicatedStorage & SharedModules
+-- Chờ các phần tử GUI và storage sẵn sàng
 repeat task.wait() until player:FindFirstChild("PlayerGui")
-repeat task.wait() until game:FindFirstChild("ReplicatedStorage") and game.ReplicatedStorage:FindFirstChild("SharedModules")
+repeat task.wait() until game:FindFirstChild("ReplicatedStorage")
 
-setfpscap(10) -- Giới hạn FPS khi AFK
+setfpscap(10)
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ButtonsModule
+local maxWaitTime = 15
+local waited = 0
 
--- Đợi an toàn và require module
-local function waitForModule()
-	for i = 1, 50 do
-		local success, result = pcall(function()
-			local SharedModules = ReplicatedStorage:FindFirstChild("SharedModules")
-			local btn = SharedModules and SharedModules:FindFirstChild("ButtonsModule")
+-- Chờ SharedModules và ButtonsModule thực sự tồn tại
+while waited < maxWaitTime do
+	local success, result = pcall(function()
+		local shared = ReplicatedStorage:FindFirstChild("SharedModules")
+		if shared then
+			local btn = shared:FindFirstChild("ButtonsModule")
 			if btn then
 				return require(btn)
 			end
-		end)
-
-		if success and result then
-			return result
 		end
-		task.wait(0.2)
+	end)
+
+	if success and result then
+		ButtonsModule = result
+		break
 	end
-	return nil
+
+	waited += 1
+	task.wait(1)
 end
 
-ButtonsModule = waitForModule()
-
 if not ButtonsModule then
-	warn("[❌] Không thể load ButtonsModule. Hãy chắc chắn bạn đang ở đúng game!")
+	warn("[❌] Không thể load ButtonsModule sau 15 giây. Có thể bạn đang không ở đúng game hoặc game chưa load xong.")
 	return
 end
 
@@ -52,10 +53,8 @@ local function JoinAfk()
 	end
 end
 
--- Theo dõi liên tục mà không chết coroutine
-task.defer(function()
-	while true do
-		pcall(JoinAfk)
-		task.wait(15)
-	end
-end)
+-- Lặp lại mỗi 15s nếu bị out
+while true do
+	pcall(JoinAfk)
+	task.wait(15)
+end
