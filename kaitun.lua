@@ -1,35 +1,45 @@
--- ✅ Auto AFK Join Script - Chuẩn để chạy autoexec hoặc loadstring
+-- ✅ Auto AFK Join Script - Fix lỗi require và coroutine khi chạy autoexec/loadstring
 repeat task.wait() until game:IsLoaded()
 repeat task.wait() until game.Players.LocalPlayer
+
 local player = game.Players.LocalPlayer
 
--- Chờ cho PlayerGui và ReplicatedStorage load hoàn tất
+-- Đợi PlayerGui & ReplicatedStorage & SharedModules
 repeat task.wait() until player:FindFirstChild("PlayerGui")
-repeat task.wait() until game:FindFirstChild("ReplicatedStorage")
-repeat task.wait() until game.ReplicatedStorage:FindFirstChild("SharedModules")
+repeat task.wait() until game:FindFirstChild("ReplicatedStorage") and game.ReplicatedStorage:FindFirstChild("SharedModules")
 
-setfpscap(10) -- Giới hạn FPS giúp nhẹ máy khi AFK
+setfpscap(10) -- Giới hạn FPS khi AFK
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
--- An toàn require ButtonsModule
 local ButtonsModule
-local success, err = pcall(function()
-	local SharedModules = ReplicatedStorage:WaitForChild("SharedModules", 10)
-	if SharedModules then
-		local btn = SharedModules:WaitForChild("ButtonsModule", 10)
-		if btn then
-			ButtonsModule = require(btn)
-		end
-	end
-end)
 
-if not success or not ButtonsModule then
+-- Đợi an toàn và require module
+local function waitForModule()
+	for i = 1, 50 do
+		local success, result = pcall(function()
+			local SharedModules = ReplicatedStorage:FindFirstChild("SharedModules")
+			local btn = SharedModules and SharedModules:FindFirstChild("ButtonsModule")
+			if btn then
+				return require(btn)
+			end
+		end)
+
+		if success and result then
+			return result
+		end
+		task.wait(0.2)
+	end
+	return nil
+end
+
+ButtonsModule = waitForModule()
+
+if not ButtonsModule then
 	warn("[❌] Không thể load ButtonsModule. Hãy chắc chắn bạn đang ở đúng game!")
 	return
 end
 
--- Hàm vào khu AFK
+-- Hàm vào khu AFK an toàn
 local function JoinAfk()
 	local ok, err = pcall(function()
 		ButtonsModule.AfkTpButtons("Yes")
@@ -42,10 +52,10 @@ local function JoinAfk()
 	end
 end
 
--- Tự vào lại nếu bị out
-task.spawn(function()
+-- Theo dõi liên tục mà không chết coroutine
+task.defer(function()
 	while true do
-		JoinAfk()
-		task.wait(15) -- Khoảng cách mỗi lần check
+		pcall(JoinAfk)
+		task.wait(15)
 	end
 end)
