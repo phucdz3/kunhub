@@ -15,7 +15,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ButtonsModule
 
 -- 🔄 Đợi ButtonsModule load
-for i = 1, 60 do
+for i = 5, 60 do
 	local shared = ReplicatedStorage:FindFirstChild("SharedModules")
 	local btnModule = shared and shared:FindFirstChild("ButtonsModule")
 
