@@ -1,41 +1,39 @@
--- ✅ Auto AFK Join Script - Dùng cho autoexec hoặc loadstring
+-- ✅ Auto AFK Join Script - AFK thông minh (chỉ vào 1 lần, kiểm tra liên tục)
 repeat task.wait() until game:IsLoaded()
 repeat task.wait() until game.Players.LocalPlayer
 
 local player = game.Players.LocalPlayer
 
--- Chờ cho PlayerGui và ReplicatedStorage load
+-- Chờ các thành phần cần thiết
 repeat task.wait() until player:FindFirstChild("PlayerGui")
 repeat task.wait() until game:FindFirstChild("ReplicatedStorage")
 repeat task.wait() until game.ReplicatedStorage:FindFirstChild("SharedModules")
 
-setfpscap(10) -- Giới hạn FPS giúp nhẹ máy khi AFK
+setfpscap(10)
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ButtonsModule
 
--- 🔄 Lặp để đợi ButtonsModule load đúng cách
-for i = 5, 60 do
+-- 🔄 Đợi ButtonsModule load
+for i = 1, 60 do
 	local shared = ReplicatedStorage:FindFirstChild("SharedModules")
 	local btnModule = shared and shared:FindFirstChild("ButtonsModule")
 
 	if btnModule then
 		local success, result = pcall(require, btnModule)
-
 		if success and result then
 			ButtonsModule = result
-			print("[✅] Đã load ButtonsModule thành công.")
+			print("[✅] Đã load ButtonsModule.")
 			break
 		end
 	end
 
-	if i % 5 == 0 then -- chỉ in log mỗi 5 giây để đỡ spam
+	if i % 5 == 0 then
 		print("[⏳] Đang chờ ButtonsModule... (" .. i .. "/60)")
 	end
 	task.wait(1)
 end
 
--- Nếu không load được thì dừng lại
 if not ButtonsModule then
 	warn("[❌] Không thể load ButtonsModule. Hãy chắc chắn bạn đang ở đúng game!")
 	return
@@ -54,10 +52,28 @@ local function JoinAfk()
 	end
 end
 
--- 🔁 Theo dõi và tự vào lại nếu bị out
+-- 🔍 Hàm kiểm tra xem người chơi còn ở khu AFK không
+local function IsInAfkZone()
+	local afkAttr = player:GetAttribute("InAfkZone")
+	return afkAttr == true
+end
+
+-- ▶️ Bắt đầu: Vào khu AFK 1 lần
+JoinAfk()
+
+-- ⏱ Theo dõi: Nếu bị out thì vào lại
 task.spawn(function()
 	while true do
-		JoinAfk()
-		task.wait(15)
+		task.wait(10)
+
+		local inAfk = false
+		pcall(function()
+			inAfk = IsInAfkZone()
+		end)
+
+		if not inAfk then
+			warn("[⚠️] Phát hiện đã out khỏi khu AFK. Đang vào lại...")
+			JoinAfk()
+		end
 	end
 end)
