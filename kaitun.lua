@@ -1,27 +1,34 @@
--- ✅ Auto AFK Join Script - Sẵn sàng chạy autoexec hoặc loadstring
+-- ✅ Auto AFK Join Script - Sẵn sàng cho autoexec hoặc loadstring
+-- Tối ưu delay & xử lý lỗi module chưa load
+
+task.wait(2) -- Cho executor và game có thời gian inject script
 
 repeat task.wait() until game:IsLoaded()
 repeat task.wait() until game.Players.LocalPlayer
 
-setfpscap(10) -- Giới hạn FPS khi AFK để nhẹ máy
+setfpscap(10) -- Giới hạn FPS khi AFK để giảm tài nguyên máy
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local player = Players.LocalPlayer
 
--- Load ButtonsModule an toàn
+print("[🔃] Đang chờ load ButtonsModule...")
+
+-- Load an toàn ButtonsModule từ SharedModules
 local ButtonsModule
 local success, err = pcall(function()
-	local SharedModules = ReplicatedStorage:WaitForChild("SharedModules", 10)
+	local SharedModules = ReplicatedStorage:WaitForChild("SharedModules", 30)
 	if SharedModules then
-		ButtonsModule = require(SharedModules:WaitForChild("ButtonsModule", 10))
+		ButtonsModule = require(SharedModules:WaitForChild("ButtonsModule", 30))
 	end
 end)
 
 if not success or not ButtonsModule then
-	warn("[❌] Không thể load ButtonsModule. Hãy chắc chắn bạn đang ở đúng game!")
+	warn("[❌] Không thể load ButtonsModule:", err or "Không rõ lỗi")
 	return
 end
+
+print("[✅] Đã load ButtonsModule thành công.")
 
 -- Hàm vào khu AFK
 local function JoinAfk()
@@ -36,15 +43,10 @@ local function JoinAfk()
 	end
 end
 
--- Theo dõi và tự vào lại nếu bị out (nếu không đang ở dungeon)
-spawn(function()
+-- Vòng lặp kiểm tra và tự join lại khu AFK nếu cần
+task.spawn(function()
 	while true do
-		local inDungeon = player:GetAttribute("InDungeon")
-		if not inDungeon then
-			JoinAfk()
-		else
-			print("[ℹ️] Đang trong dungeon - không vào lại khu AFK.")
-		end
-		wait(15)
+		JoinAfk()
+		task.wait(15) -- Kiểm tra lại mỗi 15 giây
 	end
 end)
