@@ -1,8 +1,6 @@
 repeat wait() until game:IsLoaded()
 repeat wait() until game.Players.LocalPlayer
 
-setfpscap(10)
-
 -- Code chính ở đây (VD: tự join AFK)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
