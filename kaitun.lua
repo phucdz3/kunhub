@@ -1,30 +1,40 @@
+-- ✅ Auto AFK Join Script - Chuẩn để chạy autoexec hoặc loadstring từ GitHub
 repeat wait() until game:IsLoaded()
 repeat wait() until game.Players.LocalPlayer
 
--- Code chính ở đây (VD: tự join AFK)
+setfpscap(10) -- Giới hạn FPS giúp nhẹ máy khi AFK
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
-local ButtonsModule = require(ReplicatedStorage:WaitForChild("SharedModules"):WaitForChild("ButtonsModule"))
+-- Đợi ButtonsModule load
+local success, ButtonsModule = pcall(function()
+	return require(ReplicatedStorage:WaitForChild("SharedModules"):WaitForChild("ButtonsModule"))
+end)
 
-local function JoinAfk()
-    print("[⏳] Đang cố gắng vào khu AFK...")
-    local success, err = pcall(function()
-        ButtonsModule.AfkTpButtons("Yes")
-    end)
-
-    if success then
-        print("[✅] Đã vào khu AFK thành công.")
-    else
-        warn("[⚠️] Lỗi khi vào khu AFK: ", err)
-    end
+if not success then
+	warn("[❌] Không thể load ButtonsModule. Chắc chắn bạn đang ở đúng game!")
+	return
 end
 
--- Tự động vào lại nếu bị out
+-- Hàm Join AFK Zone
+local function JoinAfk()
+	local ok, err = pcall(function()
+		ButtonsModule.AfkTpButtons("Yes")
+	end)
+
+	if ok then
+		print("[✅] Đã vào khu AFK thành công.")
+	else
+		warn("[⚠️] Gặp lỗi khi vào khu AFK:", err)
+	end
+end
+
+-- Theo dõi liên tục, tự vào lại nếu bị out
 task.spawn(function()
-    while true do
-        JoinAfk()
-        task.wait(15)
-    end
+	while true do
+		JoinAfk()
+		task.wait(15)
+	end
 end)
