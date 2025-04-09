@@ -1,24 +1,31 @@
--- ✅ Auto AFK Join Script - Chuẩn để chạy autoexec hoặc loadstring từ GitHub
-repeat wait() until game:IsLoaded()
-repeat wait() until game.Players.LocalPlayer
+-- ✅ Auto AFK Join Script - Sẵn sàng chạy autoexec hoặc loadstring
+repeat task.wait() until game:IsLoaded()
+repeat task.wait() until game.Players.LocalPlayer
 
-setfpscap(10) -- Giới hạn FPS giúp nhẹ máy khi AFK
+setfpscap(10) -- Giới hạn FPS khi AFK để nhẹ máy
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
--- Đợi ButtonsModule load
-local success, ButtonsModule = pcall(function()
-	return require(ReplicatedStorage:WaitForChild("SharedModules"):WaitForChild("ButtonsModule"))
+-- Chờ và load ButtonsModule an toàn
+local ButtonsModule
+local success, err = pcall(function()
+	local SharedModules = ReplicatedStorage:WaitForChild("SharedModules", 10)
+	if SharedModules then
+		local module = SharedModules:WaitForChild("ButtonsModule", 10)
+		if module then
+			ButtonsModule = require(module)
+		end
+	end
 end)
 
-if not success then
-	warn("[❌] Không thể load ButtonsModule. Chắc chắn bạn đang ở đúng game!")
+if not success or not ButtonsModule or typeof(ButtonsModule.AfkTpButtons) ~= "function" then
+	warn("[❌] Không thể load ButtonsModule hoặc hàm AfkTpButtons. Hãy chắc chắn bạn đang ở đúng game!")
 	return
 end
 
--- Hàm Join AFK Zone
+-- Hàm vào khu AFK
 local function JoinAfk()
 	local ok, err = pcall(function()
 		ButtonsModule.AfkTpButtons("Yes")
@@ -27,11 +34,11 @@ local function JoinAfk()
 	if ok then
 		print("[✅] Đã vào khu AFK thành công.")
 	else
-		warn("[⚠️] Gặp lỗi khi vào khu AFK:", err)
+		warn("[⚠️] Lỗi khi vào khu AFK:", err)
 	end
 end
 
--- Theo dõi liên tục, tự vào lại nếu bị out
+-- Theo dõi và tự vào lại nếu bị out
 task.spawn(function()
 	while true do
 		JoinAfk()
