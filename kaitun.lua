@@ -15,7 +15,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ButtonsModule
 
 -- 🔄 Lặp để đợi và require ButtonsModule an toàn, không yield trong pcall
-for i = 1, 60 do -- thử 60 lần, mỗi lần cách nhau 1s
+for i = 1, 10000 do -- thử 60 lần, mỗi lần cách nhau 1s
 	local shared = ReplicatedStorage:FindFirstChild("SharedModules")
 	local btnModule = shared and shared:FindFirstChild("ButtonsModule")
 
