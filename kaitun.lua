@@ -1,4 +1,5 @@
--- ✅ Auto AFK Join Script - Sẵn sàng chạy autoexec hoặc loadstring
+-- ✅ Auto AFK Join Script - Safe để chạy autoexec hoặc loadstring từ GitHub
+
 repeat task.wait() until game:IsLoaded()
 repeat task.wait() until game.Players.LocalPlayer
 
@@ -13,15 +14,12 @@ local ButtonsModule
 local success, err = pcall(function()
 	local SharedModules = ReplicatedStorage:WaitForChild("SharedModules", 10)
 	if SharedModules then
-		local module = SharedModules:WaitForChild("ButtonsModule", 10)
-		if module then
-			ButtonsModule = require(module)
-		end
+		ButtonsModule = require(SharedModules:WaitForChild("ButtonsModule", 10))
 	end
 end)
 
-if not success or not ButtonsModule or typeof(ButtonsModule.AfkTpButtons) ~= "function" then
-	warn("[❌] Không thể load ButtonsModule hoặc hàm AfkTpButtons. Hãy chắc chắn bạn đang ở đúng game!")
+if not success or not ButtonsModule then
+	warn("[❌] Không thể load ButtonsModule. Hãy chắc chắn bạn đang ở đúng game!")
 	return
 end
 
@@ -38,10 +36,15 @@ local function JoinAfk()
 	end
 end
 
--- Theo dõi và tự vào lại nếu bị out
+-- Theo dõi và tự vào lại nếu bị out (không chạy nếu đang ở dungeon)
 task.spawn(function()
 	while true do
-		JoinAfk()
+		local inDungeon = player:GetAttribute("InDungeon")
+		if not inDungeon then
+			JoinAfk()
+		else
+			print("[ℹ️] Đang trong dungeon - không vào lại khu AFK.")
+		end
 		task.wait(15)
 	end
 end)
