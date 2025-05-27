@@ -1,0 +1,80 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local remoteFunction = ReplicatedStorage:WaitForChild("__ServerBrowser")
+
+-- GUI chính
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "TeleportGui"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+-- Frame chính (KHÔNG DRAGGABLE)
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 250, 0, 160)
+frame.Position = UDim2.new(0, 10, 0, 50) -- vị trí giống hình bạn gửi
+frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+frame.BorderColor3 = Color3.fromRGB(0, 170, 255)
+frame.BorderSizePixel = 2
+frame.Visible = true
+frame.Active = false -- bỏ draggable = true
+frame.Draggable = false
+frame.Parent = screenGui
+
+local frameCorner = Instance.new("UICorner", frame)
+frameCorner.CornerRadius = UDim.new(0, 10)
+
+-- Tiêu đề
+local label = Instance.new("TextLabel")
+label.Text = "Nhập JobId"
+label.Size = UDim2.new(1, 0, 0, 30)
+label.BackgroundTransparency = 1
+label.TextScaled = true
+label.TextColor3 = Color3.new(1, 1, 1)
+label.Font = Enum.Font.GothamBold
+label.Parent = frame
+
+-- TextBox nhập JobId
+local textbox = Instance.new("TextBox")
+textbox.PlaceholderText = "Dán JobId tại đây"
+textbox.Size = UDim2.new(0.9, 0, 0, 40)
+textbox.Position = UDim2.new(0.05, 0, 0, 45)
+textbox.TextScaled = true
+textbox.TextColor3 = Color3.fromRGB(0, 0, 0)
+textbox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+textbox.Font = Enum.Font.Gotham
+textbox.Parent = frame
+
+local textboxCorner = Instance.new("UICorner", textbox)
+textboxCorner.CornerRadius = UDim.new(0, 8)
+
+-- Nút chuyển server
+local button = Instance.new("TextButton")
+button.Text = "Chuyển Server"
+button.Size = UDim2.new(0.9, 0, 0, 40)
+button.Position = UDim2.new(0.05, 0, 0, 100)
+button.TextScaled = true
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+button.Font = Enum.Font.GothamBold
+button.Parent = frame
+
+local buttonCorner = Instance.new("UICorner", button)
+buttonCorner.CornerRadius = UDim.new(0, 8)
+
+-- Xử lý khi ấn nút
+button.MouseButton1Click:Connect(function()
+	local jobId = textbox.Text
+	if jobId and jobId ~= "" then
+		local success, result = pcall(function()
+			return remoteFunction:InvokeServer("teleport", jobId)
+		end)
+
+		if success then
+			print("Đã gửi yêu cầu teleport:", result)
+		else
+			warn("Lỗi teleport:", result)
+		end
+	end
+end)
