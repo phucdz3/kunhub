@@ -1,0 +1,87 @@
+--// ⚙️ Cấu hình
+local PLAYER_LIMIT = 5 -- số lượng người chơi tối đa trong server
+local CHECK_INTERVAL = 15 -- giây giữa mỗi lần kiểm tra
+
+--// 📁 Blacklist server
+local bM = {}
+local HttpService = game:GetService("HttpService")
+local bN = "!Blacklist_Servers.json"
+function Saveserver()
+    writefile(bN, HttpService:JSONEncode(bM))
+end
+function ReadServer()
+    local success, result = pcall(function()
+        return HttpService:JSONDecode(readfile(bN))
+    end)
+    if success then
+        return result
+    else
+        Saveserver()
+        return {}
+    end
+end
+bM = ReadServer()
+
+--// 🌕 Kiểm tra full moon
+function IsFullMoon()
+    local Lighting = game:GetService("Lighting")
+    if Lighting:GetAttribute("FullMoon") ~= nil then
+        return Lighting:GetAttribute("FullMoon") == true
+    end
+
+    local moonModel = Lighting:FindFirstChild("Moon")
+    if moonModel and moonModel:FindFirstChild("Moon") then
+        local moonPart = moonModel.Moon
+        return moonPart.Size.Magnitude >= 17 -- hoặc chỉnh nếu sai
+    end
+
+    return false
+end
+
+--// 👥 Kiểm tra số người hiện tại
+function IsServerCrowded(threshold)
+    return #game.Players:GetPlayers() > threshold
+end
+
+--// 🚪 Hop server từ danh sách
+function HopServer()
+    for r = 1, 500 do
+        local servers = game:GetService("ReplicatedStorage").__ServerBrowser:InvokeServer(r)
+        if servers then
+            for k, v in pairs(servers) do
+                if
+                    k ~= game.JobId and
+                    v["Count"] <= PLAYER_LIMIT and
+                    (not bM[k] or tick() - bM[k].Time > 60 * 10)
+                then
+                    bM[k] = { Time = tick() }
+                    Saveserver()
+                    print("[HOP] 🟢 Đang chuyển đến server:", k, " (", v["Count"], "players)")
+                    game:GetService("ReplicatedStorage").__ServerBrowser:InvokeServer("teleport", k)
+                    return true
+                elseif tick() - bM[k].Time > 60 * 60 then
+                    bM[k] = nil
+                end
+            end
+        end
+        if r % 100 == 0 then task.wait() end
+    end
+    return false
+end
+
+--// 🧠 Vòng kiểm tra định kỳ
+spawn(function()
+    while task.wait(CHECK_INTERVAL) do
+        local isCrowded = IsServerCrowded(PLAYER_LIMIT)
+        local isFullMoon = IsFullMoon()
+
+        print("[CHECK] 👥 Người chơi:", #game.Players:GetPlayers(), " | 🌕 Full moon:", isFullMoon)
+
+        if not isFullMoon or isCrowded then
+            warn("[HOP] 🔄 Không hợp lệ (fullmoon =", isFullMoon, ", crowded =", isCrowded, ") → Hop")
+            HopServer()
+        else
+            print("[OK] ✅ Server ổn định. Không cần hop.")
+        end
+    end
+end)
