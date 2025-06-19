@@ -7,6 +7,8 @@ local max_rest = 150  -- Thời gian nghỉ tối đa (giây)
 -- Danh sách tin nhắn gửi theo thứ tự
 local messages = {
     "shop kitsune yeti leopard - saleroblox n e t"
+    "cheapest account at saleroblox n e t"
+    "cheapest kitsune yeti leopard account at saleroblox n e t"
 }
 
 -- Biến đếm vị trí tin nhắn hiện tại
