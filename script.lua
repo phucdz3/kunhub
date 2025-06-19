@@ -1,12 +1,12 @@
 local min_delay = 3  -- Độ trễ tối thiểu giữa các tin nhắn (giây)
 local max_delay = 10  -- Độ trễ tối đa giữa các tin nhắn (giây)
 local max_messages = 2 -- Số lần spam trước khi tạm dừng
-local min_rest = 50  -- Thời gian nghỉ tối thiểu (giây)
-local max_rest = 100  -- Thời gian nghỉ tối đa (giây)
+local min_rest = 150  -- Thời gian nghỉ tối thiểu (giây)
+local max_rest = 200  -- Thời gian nghỉ tối đa (giây)
 
 -- Danh sách tin nhắn gửi theo thứ tự
 local messages = {
-    "shop acc kitsune yeti leopard - saleroblox. n e t "
+    "shop kitsune yeti leopard - saleroblox. n e t "
 }
 
 -- Biến đếm vị trí tin nhắn hiện tại
