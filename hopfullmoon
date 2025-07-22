@@ -1,801 +1,92 @@
-getgenv().Config = {
-    ["FPS"] = 60,
-    ["Boost FPS"] = false,
-    ["Team"] = "Marines",
-    ["Black Screen"] = false,
-    ["Server2"] = "https://api-bf.yummydata.click/data-private?type=",
+if not game:IsLoaded() then repeat game.Loaded:Wait() until game:IsLoaded() end
+getgenv().Script_Mode = "Kaitun_Script"
+_G.Settings = {
+    PlantSettings = {
+        Limit = 800,
+        Plant = {
+            ["Carrot"] = 50,
+            ["Cauliflower"] = 1,
+            ["Watermelon"] = 1,
+            ["Rafflesia"] = 1,
+            ["Green Apple"] = 1,
+            ["Avocado"] = 1,
+            ["Banana"] = 1,
+            ["Pineapple"] = 1,
+            ["Kiwi"] = 1,
+            ["Bell Pepper"] = 1,
+            ["Prickly Pear"] = 1,
+            ["Loquat"] = 1,
+            ["Feijoa"] = 1,
+            ["Sugar Apple"] = 1,
+        },
+        Destroy = {
+            WhenMoney = 50000,
+            Plant = {
+                "Strawberry"
+            }
+        }
+    },
+    SeedsSetting = {
+        "Carrot", "Cauliflower", "Watermelon", "Rafflesia", "Green Apple", "Avocado", "Banana",
+        "Pineapple", "Kiwi", "Bell Pepper", "Prickly Pear", "Loquat", "Feijoa", "Sugar Apple",
+    },
+    EggSettings = {
+        StartBuyEggWhen = 150000,
+        SelectEggs = {
+            "Mythical Egg",
+            "Bug Egg",
+            "Paradise Egg",
+            "Rare Egg",
+            "Bee Egg",
+            "Primal Egg"
+        },
+    },
+    Webhook = "",
+    UpgradeEggSlots = 2,
+    UpgradePetSlots = 2,
+    PetSettings = {
+        Sell = {
+            "Dog",
+        },
+        UpgradeSlots = {
+            "Chicken", "Rooster"
+        },
+        Equip = {
+            "Chicken", "Rooster"
+        },
+        Lock = {
+            Weight = 10,
+            Enabled = true
+        }
+    },
+    CraftSettings = {
+        Enabled = true,
+        Workbench = "Anti Bee Egg",
+        SeedEventWorkbench = ""
+    },
+    ZenEvents = {
+        TakeAllTranquilPlants = true,
+        TradeChi = {
+            Enabled = true,
+            MaxChi =  20
+        }
+    },
+    StockBuy = {
+        GearStocksBuy = {""},
+        ZenItems = {""}
+    },
+    SprinklerSettings = {
+        PlaceManage = {
+            ["Basic Sprinkler"] = 1
+        }
+    },
+    UseSeedPack = true,
+    CropSettings = {
+        ['DelayTime'] = 10,
+        ['TimeCrop'] = 10
+    }
 }
-repeat wait() until game:IsLoaded() and game.Players.LocalPlayer:FindFirstChild("DataLoaded")
-
-local plr = game.Players.LocalPlayer
-
-local l_Remotes_0 = game.ReplicatedStorage:WaitForChild("Remotes");
-if plr.Name == "bocanhet164" then getgenv().team = "Marines" end
-if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)") and game:GetService("Players").LocalPlayer.PlayerGui["Main (minimal)"].Enabled then
-    repeat
-        wait()
-        pcall(function()
-            for i, v in getconnections(game:GetService("Players").LocalPlayer.PlayerGui["Main (minimal)"].ChooseTeam.Container[getgenv().Config["Team"]].Frame.TextButton.Activated) do
-                v.Function()
-            end
-        end)
-        task.wait(3)
-    until not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)")
-end
-
-
-repeat wait() until game.CoreGui
-
-local VirtualUser = game:service "VirtualUser"
-game:service("Players").LocalPlayer.Idled:connect(
-    function()
-        VirtualUser:CaptureController()
-        VirtualUser:ClickButton2(Vector2.new())
-    end
-)
-
-setfpscap(getgenv().Config["FPS"])
-if getgenv().Config["Boost FPS"] then
-    for i, v in next, workspace:GetDescendants() do
-        pcall(function()
-            v.Transparency = 1
-        end)
-    end
-    a = workspace
-    a.DescendantAdded:Connect(function(v)
-        pcall(function()
-            v.Transparency = 1
-        end)
-    end)
-    workspace.ClientAnimatorThrottling = Enum.ClientAnimatorThrottlingMode.Enabled
-    workspace.InterpolationThrottling = Enum.InterpolationThrottlingMode.Enabled
-    settings():GetService("RenderSettings").EagerBulkExecution = false
-    workspace.LevelOfDetail = Enum.ModelLevelOfDetail.Disabled
-    game:GetService("Lighting").GlobalShadows = false
-
-    settings().Rendering.QualityLevel = "Level01"
-    local g = game
-    local w = g.Workspace
-    local l = g.Lighting
-    local t = w.Terrain
-    t.WaterWaveSize = 0
-    t.WaterWaveSpeed = 0
-    t.WaterReflectance = 0
-    t.WaterTransparency = 0
-    l.GlobalShadows = false
-    l.FogEnd = 9e9
-    l.Brightness = 0
-    for i, v in pairs(g:GetDescendants()) do
-        if v.ClassName == "WedgePart"
-            or v.ClassName == "Terrain"
-            or v.ClassName == "MeshPart" then
-            v.BrickColor = BrickColor.new(155, 155, 155)
-            v.Material = "Plastic"
-            v.Transparency = 1
-        end
-        if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
-            v.Material = "Plastic"
-            v.Reflectance = 0
-        elseif v:IsA("Decal") or v:IsA("Texture") then
-            v.Transparency = 1
-        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
-            v.Lifetime = NumberRange.new(0)
-        elseif v:IsA("Explosion") then
-            v.BlastPressure = 1
-            v.BlastRadius = 1
-        elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
-            v.Enabled = false
-        elseif v:IsA("MeshPart") then
-            v.Material = "Plastic"
-            v.Reflectance = 0
-            v.TextureID = 10385902758728957
-        end
-    end
-    game.Workspace.ChildAdded:Connect(function(v)
-        if v.ClassName == "WedgePart"
-            or v.ClassName == "Terrain"
-            or v.ClassName == "MeshPart" then
-            v.BrickColor = BrickColor.new(155, 155, 155)
-            v.Material = "Plastic"
-            v.Transparency = 1
-        end
-        if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
-            v.Material = "Plastic"
-            v.Reflectance = 0
-        elseif v:IsA("Decal") or v:IsA("Texture") then
-            v.Transparency = 1
-        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
-            v.Lifetime = NumberRange.new(0)
-        elseif v:IsA("Explosion") then
-            v.BlastPressure = 1
-            v.BlastRadius = 1
-        elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
-            v.Enabled = false
-        elseif v:IsA("MeshPart") then
-            v.Material = "Plastic"
-            v.Reflectance = 0
-            v.TextureID = 10385902758728957
-        end
-    end)
-    for i, e in pairs(l:GetChildren()) do
-        if e:IsA("BlurEffect") or e:IsA("SunRaysEffect") or e:IsA("ColorCorrectionEffect") or e:IsA("BloomEffect") or e:IsA("DepthOfFieldEffect") then
-            e.Enabled = false
-        end
-    end
-    game.Lighting.ChildAdded:Connect(function(v)
-        if v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("BloomEffect") or v:IsA("DepthOfFieldEffect") then
-            v.Enabled = false
-        end
-    end)
-end
-local plr = game.Players.LocalPlayer
-
-function islive()
-    return plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") and
-        plr.Character:FindFirstChild("Humanoid") and plr.Character.Humanoid.Health > 0
-end
-
-if getgenv().Config["Black Screen"] then
-    game:GetService("Lighting").ExposureCompensation = -math.huge
-end
-
-
-function havelongma()
-    for i, v in workspace.Enemies:GetChildren() do
-        if string.find(v.Name, "Longma") then
-            return v
-        end
-    end
-    for i, v in game:GetService("ReplicatedStorage"):GetChildren() do
-        if string.find(v.Name, "Longma") then
-            return v
-        end
-    end
-end
-
-local Modules = game.ReplicatedStorage:WaitForChild("Modules")
-
-local Net = Modules:WaitForChild("Net")
-
-local RE_RegisterAttack = Net:WaitForChild("RE/RegisterAttack")
-local RE_ShootGunEvent = Net:WaitForChild("RE/ShootGunEvent")
-local RE_RegisterHit = Net:WaitForChild("RE/RegisterHit")
-local SUCCESS_HIT, HIT_FUNCTION = pcall(function()
-    return (getmenv or getsenv)(Net)._G.SendHitsToServer
-end)
-local plr = game.Players.LocalPlayer
-function GetAllBladeHits(Character)
-    local CFrame = Character:GetPivot().Position
-    local BladeHits, FirstRootPart = {}
-    local EnemyList = workspace.Enemies:GetChildren()
-    local PlayerList = workspace.Characters:GetChildren()
-    for i = 1, #EnemyList do
-        local Enemy = EnemyList[i]
-        local RootPart = Enemy.PrimaryPart
-
-        if RootPart and game.Players.LocalPlayer:DistanceFromCharacter(RootPart.Position) <= 350 then
-            if not FirstRootPart then
-                FirstRootPart = RootPart
-            else
-                table.insert(BladeHits, { Enemy, RootPart, })
-            end
-        end
-    end
-
-    return FirstRootPart, BladeHits
-end
-
-local SUCCESS_FLAGS, COMBAT_REMOTE_THREAD = pcall(function()
-    return require(Modules.Flags).COMBAT_REMOTE_THREAD or false
-end)
-local RegisterAttack = Net:WaitForChild("RE/RegisterAttack")
-local RegisterHit = Net:WaitForChild("RE/RegisterHit")
-function UseNormalClick(Character, Cooldown)
-    local RootPart, BladeHits = GetAllBladeHits(Character)
-    RE_RegisterAttack:FireServer(Cooldown)
-
-    if SUCCESS_FLAGS and COMBAT_REMOTE_THREAD and SUCCESS_HIT and HIT_FUNCTION then
-        HIT_FUNCTION(RootPart, BladeHits)
-    else
-        RE_RegisterHit:FireServer(RootPart, BladeHits)
-    end
-end
-
-local v36 = {};
-local v37 = 0;
-local _ = Random.new();
-local v39 = nil;
-local v40 = nil;
-local v41 = nil;
-local v42 = nil;
-local v43 = nil;
-local v44 = nil;
-local v45 = nil;
-local v46 = nil;
-
-spawn(function()
-    while wait() do
-        if getgenv().Enabled then
-            UseNormalClick(game.Players.LocalPlayer.Character, 0.3)
-        end
-    end
-end)
-spawn(function()
-    while wait() do
-        if getgenv().Enabled2 then
-            UseNormalClick(game.Players.LocalPlayer.Character, 0.3)
-            wait(math.random(5, 10))
-        end
-    end
-end)
-
-function EnableBuso()
-    if not game.Players.LocalPlayer.Character:FindFirstChild("HasBuso") then
-        local args = {
-            [1] = "Buso"
-        }
-        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
-    end
-end
-
-function GetWeapon(bh)
-    s = ""
-    for r, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-        if v:IsA("Tool") and v.ToolTip == bh then
-            s = v.Name
-        end
-    end
-    for r, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
-        if v:IsA("Tool") and v.ToolTip == bh then
-            s = v.Name
-        end
-    end
-    return s
-end
-
-function EquipWeapon(ToolSe)
-    if ToolSe == "" or ToolSe == nil then
-        ToolSe = "Melee"
-    end
-    if game.Players.LocalPlayer.Backpack:FindFirstChild(GetWeapon(ToolSe)) then
-        local bi = game.Players.LocalPlayer.Backpack:FindFirstChild(GetWeapon(ToolSe))
-        wait(.4)
-        game.Players.LocalPlayer.Character.Humanoid:EquipTool(bi)
-    end
-end
-
-function equipweapon(aq)
-    local c6 = tostring(aq)
-    local c7 = game.Players.LocalPlayer.Backpack:FindFirstChild(c6)
-    local c8 =
-        game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") or
-        game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
-    if c7 then
-        c8:EquipTool(c7)
-    end
-end
-
-if game.PlaceId ~= 7449423635 then
-    local args = {
-        [1] = "TravelZou"
-    }
-    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
-end
-function havetushita()
-    for i, v in next, game:GetService("ReplicatedStorage").Remotes["CommF_"]:InvokeServer("getInventory") do
-        if v.Name == "Tushita" then
-            return true
-        end
-    end
-end
-
-function writefileyummy2()
-    writefile(game.Players.LocalPlayer.Name .. ".txt", "Completed-Done")
-end
-
-spawn(function()
-    while wait() do
-        if havetushita() then
-            writefileyummy2()
-        end
-    end
-end)
-function haveYama()
-    for i, v in next, game:GetService("ReplicatedStorage").Remotes["CommF_"]:InvokeServer("getInventory") do
-        if v.Name == "Yama" then
-            return true
-        end
-    end
-end
-
-function haveTourch()
-    for i, v in game.Players.LocalPlayer.Backpack:GetChildren() do
-        if v:IsA("Tool") and v.Name == "Holy Torch" then
-            return true
-        end
-    end
-    if game.Players.LocalPlayer.Character:FindFirstChild("Holy Torch") then
-        return true
-    end
-end
-
---[[
-
-]]
-function isopen()
-    local args = {
-        [1] = "TushitaProgress"
-    }
-
-    return game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(unpack(args))
-        .OpenedDoor
-end
-
-function haveRip()
-    for i, v in game:GetService("ReplicatedStorage"):GetChildren() do
-        if string.find(v.Name, "rip_indra True Form") then
-            return v
-        end
-    end
-    for i, v in workspace.Enemies:GetChildren() do
-        if string.find(v.Name, "rip_indra True Form") then
-            return v
-        end
-    end
-    return false
-end
-
-local FileLockLib = {}
-local HttpService = game:GetService('HttpService')
-function FileLockLib.SetupFile(FileName, Data, UpdateTime)
-    local HttpService = game:GetService('HttpService')
-    local FileData = {
-        Updated = 0,
-        Data = Data
-    }
-
-    if not isfile(FileName) then
-        writefile(FileName, HttpService:JSONEncode(FileData))
-    end
-
-    local FileStatus = {
-        LastHasAcc = tick(),
-        HasAcc = false,
-        NeedUpdateTime = UpdateTime
-    }
-    local StatusFileName = FileName .. "_Status.json"
-    if not isfile(StatusFileName) then
-        writefile(StatusFileName, HttpService:JSONEncode(FileStatus))
-    else
-        FileStatus = HttpService:JSONDecode(readfile(StatusFileName))
-    end
-end
-
-function FileLockLib.ReadFile(FileName)
-    local FileData = {
-        Updated = 0,
-        Data = {}
-    }
-
-    if not isfile(FileName) then
-        writefile(FileName, HttpService:JSONEncode(FileData))
-    else
-        FileData = HttpService:JSONDecode(readfile(FileName))
-    end
-
-    local StatusFileName = FileName .. "_Status.json"
-    local FileStatus = HttpService:JSONDecode(readfile(StatusFileName))
-
-    local NeedUpdateData = false
-    if FileStatus.HasAcc and tick() - FileStatus.LastHasAcc > 120 then
-        FileStatus.HasAcc = false
-    end
-    if tick() - FileData.Updated > FileStatus.NeedUpdateTime and not FileStatus.HasAcc then
-        NeedUpdateData = true
-    end
-    return FileData.Data, NeedUpdateData
-end
-
-function FileLockLib.SetUpdateStatus(FileName, Status)
-    local StatusFileName = FileName .. "_Status.json"
-    local FileStatus = HttpService:JSONDecode(readfile(StatusFileName))
-    FileStatus.HasAcc = Status
-    if Status then
-        FileStatus.LastHasAcc = tick()
-    end
-    writefile(StatusFileName, HttpService:JSONEncode(FileStatus))
-end
-
-function FileLockLib.SaveFile(FileName, Data)
-    local StatusFileName = FileName .. "_Status.json"
-    local FileStatus = HttpService:JSONDecode(readfile(StatusFileName))
-    writefile(StatusFileName, HttpService:JSONEncode(FileStatus))
-    local FileData = HttpService:JSONDecode(readfile(FileName))
-    FileData.Data = Data
-    FileData.Updated = tick()
-    FileLockLib.SetUpdateStatus(FileName, false)
-    writefile(FileName, HttpService:JSONEncode(FileData))
-end
-
-local FileLockLib = {}
-local HttpService = game:GetService('HttpService')
-function FileLockLib.SetupFile(FileName, Data, UpdateTime)
-    local HttpService = game:GetService('HttpService')
-    local FileData = {
-        Updated = 0,
-        Data = Data
-    }
-
-    if not isfile(FileName) then
-        writefile(FileName, HttpService:JSONEncode(FileData))
-    end
-
-    local FileStatus = {
-        LastHasAcc = tick(),
-        HasAcc = false,
-        NeedUpdateTime = UpdateTime
-    }
-    local StatusFileName = FileName .. "_Status.json"
-    if not isfile(StatusFileName) then
-        writefile(StatusFileName, HttpService:JSONEncode(FileStatus))
-    else
-        FileStatus = HttpService:JSONDecode(readfile(StatusFileName))
-    end
-end
-
-function FileLockLib.ReadFile(FileName)
-    local FileData = {
-        Updated = 0,
-        Data = {}
-    }
-
-    if not isfile(FileName) then
-        writefile(FileName, HttpService:JSONEncode(FileData))
-    else
-        FileData = HttpService:JSONDecode(readfile(FileName))
-    end
-
-    local StatusFileName = FileName .. "_Status.json"
-    local FileStatus = HttpService:JSONDecode(readfile(StatusFileName))
-
-    local NeedUpdateData = false
-    if FileStatus.HasAcc and tick() - FileStatus.LastHasAcc > 120 then
-        FileStatus.HasAcc = false
-    end
-    if tick() - FileData.Updated > FileStatus.NeedUpdateTime and not FileStatus.HasAcc then
-        NeedUpdateData = true
-    end
-    return FileData.Data, NeedUpdateData
-end
-
-function FileLockLib.SetUpdateStatus(FileName, Status)
-    local StatusFileName = FileName .. "_Status.json"
-    local FileStatus = HttpService:JSONDecode(readfile(StatusFileName))
-    FileStatus.HasAcc = Status
-    if Status then
-        FileStatus.LastHasAcc = tick()
-    end
-    writefile(StatusFileName, HttpService:JSONEncode(FileStatus))
-end
-
-function FileLockLib.SaveFile(FileName, Data)
-    local StatusFileName = FileName .. "_Status.json"
-    local FileStatus = HttpService:JSONDecode(readfile(StatusFileName))
-    writefile(StatusFileName, HttpService:JSONEncode(FileStatus))
-    local FileData = HttpService:JSONDecode(readfile(FileName))
-    FileData.Data = Data
-    FileData.Updated = tick()
-    FileLockLib.SetUpdateStatus(FileName, false)
-    writefile(FileName, HttpService:JSONEncode(FileData))
-end
-
-function NewHopServer(PlaceID)
-    FileLockLib.SetupFile("HopServerData.json", {}, 2 * 60)
-    local Data, NeedUpdateData = FileLockLib.ReadFile("HopServerData.json")
-    if NeedUpdateData then
-        FileLockLib.SetUpdateStatus("HopServerData.json", true)
-        Data = {}
-        local ListSite = {
-            ListSite = {}
-        }
-        local Cursor = ""
-        for i = 1, 3 do
-            local Url = 'https://games.roblox.com/v1/games/' ..
-                PlaceID .. '/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true'
-            if Cursor and Cursor ~= "" then
-                Url = Url .. '&cursor=' .. Cursor
-            end
-            local Ret = loadstring(game:HttpGet(Url))()
-            local Site = game.HttpService:JSONDecode(Ret)
-            if Site.error then
-                print("Error")
-                break;
-            end
-            if Site.data then
-                for k, v in Site.data do
-                    print(v.id)
-                    table.insert(ListSite.ListSite, v.id)
-                end
-            end
-            if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
-                Cursor = Site.nextPageCursor
-            else
-                break;
-            end
-        end
-
-
-        FileLockLib.SaveFile("HopServerData.json", ListSite.ListSite)
-
-        if #ListSite.ListSite > 10 then
-            FileLockLib.SaveFile("HopServerData.json", ListSite.ListSite)
-        else
-            print("save fail")
-        end
-        FileLockLib.SetUpdateStatus("HopServerData.json", false)
-        return NewHopServer(PlaceID)
-    else
-        local ServerIdJoined = {}
-        if isfile("ServerIdJoined.json") then
-            ServerIdJoined = HttpService:JSONDecode(readfile("ServerIdJoined.json"))
-        end
-        for k, v in ServerIdJoined do
-            if tick() - v > 60 * 40 then
-                ServerIdJoined[k] = nil
-            end
-        end
-        local Site
-        local c = 0
-        while not Site do
-            local r = math.random(1, #Data)
-            local Sited = Data[r]
-            if not ServerIdJoined[Sited] then
-                Site = Sited
-            end
-            c = c + 1
-            if c % 100 == 0 then wait() end
-        end
-        ServerIdJoined[Site] = tick()
-        writefile("ServerIdJoined.json", HttpService:JSONEncode(ServerIdJoined))
-        game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, Site, game.Players.LocalPlayer)
-        return
-    end
-end
-
-local bM = {}
-local HttpService = game:GetService("HttpService")
-local bN = "!Blacklist_Servers.json"
-function Saveserver()
-    local HttpService = game:GetService("HttpService")
-    writefile(bN, HttpService:JSONEncode(bM))
-end
-
-local Notify = require(game.ReplicatedStorage:WaitForChild("Notification"));
-function ReadServer()
-    local s, o =
-        pcall(
-            function()
-                local HttpService = game:GetService("HttpService")
-                Hub = game:GetService("HttpService")
-                return HttpService:JSONDecode(readfile(bN))
-            end
-        )
-    if s then
-        return o
-    else
-        Saveserver()
-        return ReadServer()
-    end
-end
-
-bM = ReadServer()
-function HopServer()
-    local function Hop()
-        for r = 1, math.random(100, 500) do
-            local bP = game:GetService("ReplicatedStorage").__ServerBrowser:InvokeServer(r)
-            if bP then
-                for k, v in pairs(bP) do
-                    if k ~= game.JobId and v["Count"] <= 11 then
-                        if not bM[k] or tick() - bM[k].Time > 60 * 10 then
-                            bM[k] = { Time = tick() }
-                            Saveserver()
-                            Notify.new("<Color=Red>\nServer Count: " ..
-                                v["Count"] .. "\nRegion: " .. v["Region"] .. "\nServerID: " ..
-                                k .. "<Color=/>"):Display();
-                            game:GetService("ReplicatedStorage").__ServerBrowser:InvokeServer("teleport", k)
-                            return true
-                        elseif tick() - bM[k].Time > 60 * 60 then
-                            bM[k] = nil
-                        end
-                    end
-                end
-            end
-        end
-        return false
-    end
-    if not getgenv().Loaded then
-        local function bQ(v)
-            if v.Name == "ErrorPrompt" then
-                if v.Visible then
-                    if v.TitleFrame.ErrorTitle.Text == "Teleport Failed" then
-                        HopServer()
-                        v.Visible = false
-                    end
-                end
-                v:GetPropertyChangedSignal("Visible"):Connect(
-                    function()
-                        if v.Visible then
-                            if v.TitleFrame.ErrorTitle.Text == "Teleport Failed" then
-                                HopServer()
-                                v.Visible = false
-                            end
-                        end
-                    end
-                )
-            end
-        end
-        for k, v in pairs(game.CoreGui.RobloxPromptGui.promptOverlay:GetChildren()) do
-            bQ(v)
-        end
-        game.CoreGui.RobloxPromptGui.promptOverlay.ChildAdded:Connect(bQ)
-        getgenv().Loaded = true
-    end
-    while not Hop() do
-        wait()
-    end
-    Saveserver()
-end
-
-local hopless = false
-spawn(function()
-    pcall(function()
-        while wait() do
-            pcall(function()
-                if hopless then
-                    HopServer()
-                    NewHopServer(game.PlaceId)
-                end
-            end)
-        end
-    end)
-end)
-function getinfoallboss2()
-    local res = request({
-        Url = getgenv().Config["Server2"] .. "Rare%20Boss",
-        Method = "GET"
-    })
-
-    local data = game:GetService("HttpService"):JSONDecode(res.Body)
-
-    if not data or next(data) == nil then
-        return {}
-    end
-
-    return data
-end
-
-local Tweento = loadstring(game:HttpGet(
-    "https://raw.githubusercontent.com/ZhxCKaMPVfef/huhu/refs/heads/master/tween.lua"))()
-local startcrawlboss = false
-spawn(function()
-    pcall(function()
-        while wait() do
-            pcall(function()
-                if not haveRip() and not havetushita() then
-                    if startcrawlboss then
-                        if plr:DistanceFromCharacter(Vector3.new(5247.01123046875, 1014.4168701171875, -34.69000244140625)) >= 100 then
-                            Tweento(CFrame.new(5247.01123046875, 1014.4168701171875, -34.69000244140625))
-                        else
-                            local allData = getinfoallboss2()["data"]
-                            if #allData > 1 then
-                                if (allData[#allData]["Rare Boss"] == "rip_indra True Form") then
-                                    game:GetService("ReplicatedStorage").__ServerBrowser:InvokeServer("teleport",
-                                        allData[#allData]["JobId"])
-                                end
-                            end
-                        end
-                    end
-                end
-            end)
-        end
-    end)
-end)
-spawn(function()
-    pcall(function()
-        while wait() do
-            pcall(function()
-                if not havetushita() then
-                    if not isopen() then
-                        if not haveRip() then
-                            if plr:DistanceFromCharacter(Vector3.new(5247.01123046875, 1014.4168701171875, -34.69000244140625)) >= 100 then
-                                Tweento(CFrame.new(5247.01123046875, 1014.4168701171875, -34.69000244140625))
-                            else
-                                startcrawlboss = true
-                            end
-                        else
-                            if not haveTourch() then
-                                repeat
-                                    wait()
-                                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(
-                                        5712.32080078125,
-                                        40.339672088623047,
-                                        250.47955322265625)
-                                    game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(
-                                        5712.32080078125,
-                                        40.339672088623047,
-                                        250.47955322265625))
-                                until haveTourch()
-                            else
-                                local args = {
-                                    [1] = "TushitaProgress"
-                                }
-
-                                local sortedTorches = {}
-                                for _, torch in ipairs(workspace.Map.Turtle.QuestTorches:GetChildren()) do
-                                    table.insert(sortedTorches, torch)
-                                end
-                                table.sort(sortedTorches, function(a, b)
-                                    return tonumber(a.Name:match("%d+")) < tonumber(b.Name:match("%d+"))
-                                end)
-
-                                for _, v in ipairs(sortedTorches) do
-                                    for i1, v1 in game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(unpack(args)).Torches do
-                                        if not v1 then
-                                            if string.find(v.Name, i1) then
-                                                equipweapon("Holy Torch")
-                                                Tweento(v.CFrame)
-                                                local hrp = plr.Character and
-                                                    plr.Character:FindFirstChild("HumanoidRootPart")
-                                                if not hrp then return end
-                                                for _, v2 in ipairs(v:GetChildren()) do
-                                                    if v2 and v2:IsA("TouchTransmitter") then
-                                                        firetouchinterest(hrp, v2.Parent, 0)
-                                                    end
-                                                end
-                                            end
-                                        end
-                                    end
-                                end
-                            end
-                        end
-                    else
-                        if not havelongma() then
-                            hopless = true
-                        else
-                            if havelongma():IsA("Part") then
-                                Tweento(havelongma().CFrame * CFrame.new(0, 20, 0))
-                            else
-                                Tweento(havelongma().HumanoidRootPart.CFrame * CFrame.new(0, 20, 0))
-                            end
-                            pcall(function()
-                                repeat
-                                    wait()
-
-                                    spawn(function()
-                                        if havelongma():FindFirstChild("HumanoidRootPart") and havelongma():FindFirstChild("Humanoid") and havelongma().Humanoid.Health > 0 then
-                                            Tweento(havelongma().HumanoidRootPart.CFrame * CFrame.new(0, 20, 0))
-                                        end
-                                    end)
-                                    spawn(function()
-                                        EquipWeapon()
-                                    end)
-                                    spawn(function()
-                                        BringMob()
-                                    end)
-                                    spawn(function()
-                                        EnableBuso()
-                                    end)
-                                    spawn(function()
-                                        getgenv().Enabled = true
-                                    end)
-                                until not havelongma() or not havelongma().Parent or not havelongma():FindFirstChild("HumanoidRootPart") or not havelongma():FindFirstChild("Humanoid") or havelongma().Humanoid.Health <= 0
-                            end)
-                        end
-                    end
-                else
-                    writefileyummy2()
-                end
-            end)
-        end
-    end)
-end)
+getgenv().Key = "MARU-YNVSO-6EXM2-EE65-VKZ4L-6TOR"
+getgenv().id = "1101830849026084904"
+getgenv().Script_Mode = "Kaitun_Script"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
