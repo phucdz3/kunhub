@@ -1,6 +1,5 @@
 repeat wait() until game:IsLoaded()
 wait(10)
-script_key="xJiZaSWiACdRsOaIANhZukzPkjWkKykJ";
 getgenv().Config = {
     ["Time To Sell"] = 35, -- Seconds
     ["Craft Event"] = {
