@@ -1,4 +1,3 @@
-task.wait(5)
 getgenv().ConfigsKaitun = {
 	["Block Pet Gift"] = true,
 	
