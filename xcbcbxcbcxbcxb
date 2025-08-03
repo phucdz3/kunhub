@@ -65,6 +65,9 @@ getgenv().ConfigsKaitun = {
 	},
 
 	Events = {
+		["Cook Event"] = {
+			Minimum_Money = 30_000_000, -- minimum money to start play this event
+		},
 		["Zen Event"] = {
 			["Restocking"] = { -- Minimumthing to restock
 				Max_Restocks_Price = 3_000_000_000_000,
