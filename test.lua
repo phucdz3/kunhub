@@ -14,8 +14,8 @@ getgenv().Config = {
     },
     ["Boost FPS"] = {
         ["Set FPS"] = {
-            ["Enabled"] = false,
-            ["FPS"] = 5
+            ["Enabled"] = true,
+            ["FPS"] = 10
         },
         ["White Screen"] = false,
         ["Black Screen"] = false,
