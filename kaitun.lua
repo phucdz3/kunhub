@@ -36,4 +36,4 @@ getgenv().FpsBoost1 = true
     }
 getgenv().Team = "Pirates"
 getgenv().AutoLoad = false --Will Load Script On Server Hop
- loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/3b2169cf53bc6104dabe8e19562e5cc2.lua"))()
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/85e904ae1ff30824c1aa007fc7324f8f.lua"))()
