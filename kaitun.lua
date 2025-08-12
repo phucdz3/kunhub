@@ -1,79 +1,39 @@
--- ✅ Auto AFK Join Script - AFK thông minh (chỉ vào 1 lần, kiểm tra liên tục)
-repeat task.wait() until game:IsLoaded()
-repeat task.wait() until game.Players.LocalPlayer
+script_key = "lqFgIriDBpHgeNWRiUsuhNtdrkkHIGbm"
+getgenv().SetFpsCap = true
+getgenv().FpsCap = 10
+getgenv().OneClickUi = true -- Only Open Necessacry Ui For One Click
+getgenv().FpsBoost1 = true
+    getgenv().WhiteScreen = true
+    getgenv().UiCheckItems = false
+    getgenv().OneClickSetting = {
+        Enable=true,
+        UnlimitGetQuest=true,
+        TripleQuest=true,
+        AutoAddStats=true,
+        RedeemCode=true,
+        Sea2KeyHop=true,
+        FruitEat = { --Priority, Name, 
+            [1] = {"Magma-Magma"},
+            [2] = {"Magma-Magma"}
+        },
+        EatFruitFromStorage = false,
+        SnipeFruit = false,
+        SnipeFruitMirage = false,
+        HopIfFoundNearExploiter = false,
+        HopHakiColor =false,
+        HopTushita = false,
+        HopValkyriehelm = false,
+        HopMirrorFractal=false,
+        FarmPole = false, -- Turn off If Want Focus Level
+        FarmItems = false, --Turn off If Want Focus Level And CDK, THis Only get After You Get God Human
+        DisableSoulGuitar = true,
+        DisableCDK = true,
+        DisableRaceEvolve = true,
 
-local player = game.Players.LocalPlayer
-
--- Chờ các thành phần cần thiết
-repeat task.wait() until player:FindFirstChild("PlayerGui")
-repeat task.wait() until game:FindFirstChild("ReplicatedStorage")
-repeat task.wait() until game.ReplicatedStorage:FindFirstChild("SharedModules")
-
-setfpscap(10)
-
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ButtonsModule
-
--- 🔄 Đợi ButtonsModule load
-for i = 5, 60 do
-	local shared = ReplicatedStorage:FindFirstChild("SharedModules")
-	local btnModule = shared and shared:FindFirstChild("ButtonsModule")
-
-	if btnModule then
-		local success, result = pcall(require, btnModule)
-		if success and result then
-			ButtonsModule = result
-			print("[✅] Đã load ButtonsModule.")
-			break
-		end
-	end
-
-	if i % 5 == 0 then
-		print("[⏳] Đang chờ ButtonsModule... (" .. i .. "/60)")
-	end
-	task.wait(1)
-end
-
-if not ButtonsModule then
-	warn("[❌] Không thể load ButtonsModule. Hãy chắc chắn bạn đang ở đúng game!")
-	return
-end
-
--- ✅ Hàm vào khu AFK
-local function JoinAfk()
-	local ok, err = pcall(function()
-		ButtonsModule.AfkTpButtons("Yes")
-	end)
-
-	if ok then
-		print("[✅] Đã vào khu AFK thành công.")
-	else
-		warn("[⚠️] Lỗi khi vào khu AFK:", err)
-	end
-end
-
--- 🔍 Hàm kiểm tra xem người chơi còn ở khu AFK không
-local function IsInAfkZone()
-	local afkAttr = player:GetAttribute("InAfkZone")
-	return afkAttr == true
-end
-
--- ▶️ Bắt đầu: Vào khu AFK 1 lần
-JoinAfk()
-
--- ⏱ Theo dõi: Nếu bị out thì vào lại
-task.spawn(function()
-	while true do
-		task.wait(10)
-
-		local inAfk = false
-		pcall(function()
-			inAfk = IsInAfkZone()
-		end)
-
-		if not inAfk then
-			warn("[⚠️] Phát hiện đã out khỏi khu AFK. Đang vào lại...")
-			JoinAfk()
-		end
-	end
-end)
+    }
+    getgenv().OneClickFarms = {
+        ["Shark Anchor"] = false,
+    }
+getgenv().Team = "Pirates"
+getgenv().AutoLoad = false --Will Load Script On Server Hop
+ loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/3b2169cf53bc6104dabe8e19562e5cc2.lua"))()
