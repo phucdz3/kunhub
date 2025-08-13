@@ -1,39 +1,36 @@
-script_key = "lqFgIriDBpHgeNWRiUsuhNtdrkkHIGbm"
-getgenv().SetFpsCap = true
-getgenv().FpsCap = 10
-getgenv().OneClickUi = true -- Only Open Necessacry Ui For One Click
-getgenv().FpsBoost1 = true
-    getgenv().WhiteScreen = false
-    getgenv().UiCheckItems = false
-    getgenv().OneClickSetting = {
-        Enable=true,
-        UnlimitGetQuest=true,
-        TripleQuest=true,
-        AutoAddStats=true,
-        RedeemCode=true,
-        Sea2KeyHop=true,
-        FruitEat = { --Priority, Name, 
-            [1] = {"Magma-Magma"},
-            [2] = {"Magma-Magma"}
-        },
-        EatFruitFromStorage = false,
-        SnipeFruit = false,
-        SnipeFruitMirage = false,
-        HopIfFoundNearExploiter = false,
-        HopHakiColor =false,
-        HopTushita = false,
-        HopValkyriehelm = false,
-        HopMirrorFractal=false,
-        FarmPole = false, -- Turn off If Want Focus Level
-        FarmItems = false, --Turn off If Want Focus Level And CDK, THis Only get After You Get God Human
-        DisableSoulGuitar = true,
-        DisableCDK = true,
-        DisableRaceEvolve = true,
+-- Cấu hình
+local min_delay = 3   -- Độ trễ tối thiểu giữa các tin nhắn (giây)
+local max_delay = 10  -- Độ trễ tối đa giữa các tin nhắn (giây)
+local max_messages = 2 -- Số lần spam trước khi tạm dừng
+local rest_time = 300 -- Thời gian nghỉ trước khi tiếp tục spam (giây)
 
-    }
-    getgenv().OneClickFarms = {
-        ["Shark Anchor"] = false,
-    }
-getgenv().Team = "Pirates"
-getgenv().AutoLoad = false --Will Load Script On Server Hop
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/85e904ae1ff30824c1aa007fc7324f8f.lua"))()
+-- Danh sách tin nhắn ngẫu nhiên để tránh bị phát hiện
+local messages = {
+    "🔥 Cheap fruits at saleroblox n e t 🍎",
+    "💎 Best deals only at saleroblox n e t 💰",
+}
+
+-- Hàm chọn tin nhắn ngẫu nhiên
+function getRandomMessage()
+    return messages[math.random(1, #messages)]
+end
+
+-- Hàm chọn thời gian chờ ngẫu nhiên
+function getRandomDelay()
+    return math.random(min_delay, max_delay)
+end
+
+-- Bắt đầu vòng lặp spam chat với bảo vệ chống ban
+while true do
+    local count = 0 -- Reset số lần spam mỗi vòng
+
+    while count < max_messages do
+        wait(getRandomDelay()) -- Đợi thời gian ngẫu nhiên trước khi gửi
+        game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(getRandomMessage(), "All")
+        count = count + 1
+    end
+
+    -- Sau khi đạt max_messages, nghỉ trong một khoảng thời gian trước khi tiếp tục
+    print("⏸️ Đang nghỉ " .. rest_time .. " giây trước khi tiếp tục spam...")
+    wait(rest_time)
+end
