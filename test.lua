@@ -1,35 +1,24 @@
-UserSettings():GetService("UserGameSettings").MasterVolume = 0
-settings().Rendering.GraphicsMode = 9
-script_key = "WKE2ZA4HXCCJVKNS433O77X277QMRSXN6DF35KNXX"
-getgenv().Shutdown = true -- will shutdown hop when fail
-getgenv().Configs = {
-    ["Team"] = "Marines",
-    ["FPS Boost"] = {
-        ["Enable"] = true,
-        ["FPS Cap"] = 10,
+getgenv().Mode = "OneClick"
+getgenv().Setting = {
+    ["Team"] = "Pirates", -- Options "Pirates", "Marines"
+    ["FucusOnLevel"] = true,
+    ["Fruits"] = {  -- setting for fruits u want
+        ["Primary"] = { -- if current fruit is not in this list, eat/buy
+            "Dough-Dough",
+            "Dragon-Dragon",
+            -- u can configs add mores/remove and must end with , (comma symbol)
+        },
+        ["Normal"] = { -- it just a normal fruit list
+            "Magma-Magma",
+            -- u can configs add mores/remove and must end with , (comma symbol)
+        }
+        -- run this for get all fruit name `local t={};for _,v in pairs(game.ReplicatedStorage.Remotes.CommF_:InvokeServer("GetFruits"))do table.insert(t,v.Name)end;setclipboard(table.concat(t, "\n"))`
     },
-    ["Farm Boss Drops"] = {
-        ["Enable"] = false,
-        ["When x2 Exp Expired"] = false
+    ["Lock Fruits"] = { -- don't use or eat fruits in this list
+        "Yeti-Yeti",
+        "Kitsune-Kitsune"
     },
-    ["Hop"] = {
-        ["Enable"] = false,
-        ["Hop Find Tushita"] = false,
-        ["Hop Find Valkyrie Helm"] = false,
-        ["Hop Find Mirror Fractal"] = false
-    },
-    ["Auto Collect Berry"] = false,
-    ["Auto Evo Race"] = false,
-    ["Awaken Fruit"] = false,
-    ["Rainbow Haki"] = false,
-    ["Hop Player Near"] = true,
-    ["Skull Guitar"] = false,
-    ["Find Fruit"] = true, -- Will find 1m+ fruit to unlock swan door to access third sea
-    ["Cursed Dual Katana"] = false,
-    ["Switch Melee"] = true,
-    ["Eat Fruit"] = "", -- leave blank for none, put the fruit name like this example: Smoke Fruit, T-Rex Fruit, ...
-    ["Snipe Fruit"] = "Kitsune Fruit", -- leave blank for none, put the fruit name like this example: Smoke Fruit, T-Rex Fruit, ...
-    ["Lock Fragment"] = 0,
-    ["Buy Stuffs"] = true -- buso, geppo, soru, ken haki, ...
-}
-repeat task.wait(1) pcall(function() loadstring(game:HttpGet("https://raw.githubusercontent.com/Xero2409/XeroHub/refs/heads/main/kaitun.lua"))() end) until getgenv().Check_Execute
+    ["IdleCheck"] = 50, -- every (x) seconds if not moving rejoin
+};
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/Loader.lua"))()
