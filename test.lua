@@ -1,24 +1,35 @@
-repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-getgenv().Key = "3df5493413a543e9572eb8b5"
-getgenv().Config = {
-    ["Pet"] = {
-        ["Name Pet"] = {"Kitsune","Butterfly","Dragonfly","Capybara","Ostrich","Mimic Octopus"}, -- Enter the name of the pet you like; if there's an egg available, it will automatically purchase it.
-        ["Auto Mutation Pet"] = {}, -- Enter the mutation of the pet you want — once you have the pet, it will automatically farm and insert it into the machine  
-        ["Delete Pet Other"] = true, -- It will delete other pets that do not have the name in name pet
+UserSettings():GetService("UserGameSettings").MasterVolume = 0
+settings().Rendering.GraphicsMode = 9
+script_key = "WKE2ZA4HXCCJVKNS433O77X277QMRSXN6DF35KNXX"
+getgenv().Shutdown = true -- will shutdown hop when fail
+getgenv().Configs = {
+    ["Team"] = "Marines",
+    ["FPS Boost"] = {
+        ["Enable"] = true,
+        ["FPS Cap"] = 10,
     },
-    ["Webhook"] = {
-        ["Enabled"] = false,
-        ["Url"] = "",
-        ["Webhook Profile"] = true,
-        ["Webhook Collect Egg"] = true,
+    ["Farm Boss Drops"] = {
+        ["Enable"] = false,
+        ["When x2 Exp Expired"] = false
     },
-    ["Boost FPS"] = {
-        ["Set FPS"] = {
-            ["Enabled"] = true,
-            ["FPS"] = 10
-        },
-        ["White Screen"] = false,
-        ["Black Screen"] = false,
-    }
+    ["Hop"] = {
+        ["Enable"] = false,
+        ["Hop Find Tushita"] = false,
+        ["Hop Find Valkyrie Helm"] = false,
+        ["Hop Find Mirror Fractal"] = false
+    },
+    ["Auto Collect Berry"] = false,
+    ["Auto Evo Race"] = false,
+    ["Awaken Fruit"] = false,
+    ["Rainbow Haki"] = false,
+    ["Hop Player Near"] = true,
+    ["Skull Guitar"] = false,
+    ["Find Fruit"] = true, -- Will find 1m+ fruit to unlock swan door to access third sea
+    ["Cursed Dual Katana"] = false,
+    ["Switch Melee"] = true,
+    ["Eat Fruit"] = "", -- leave blank for none, put the fruit name like this example: Smoke Fruit, T-Rex Fruit, ...
+    ["Snipe Fruit"] = "Kitsune Fruit", -- leave blank for none, put the fruit name like this example: Smoke Fruit, T-Rex Fruit, ...
+    ["Lock Fragment"] = 0,
+    ["Buy Stuffs"] = true -- buso, geppo, soru, ken haki, ...
 }
-loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/refs/heads/main/KaitunGAG.lua"))()
+repeat task.wait(1) pcall(function() loadstring(game:HttpGet("https://raw.githubusercontent.com/Xero2409/XeroHub/refs/heads/main/kaitun.lua"))() end) until getgenv().Check_Execute
