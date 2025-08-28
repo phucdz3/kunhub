@@ -6,7 +6,7 @@ getgenv().Configs = {
     ["Team"] = "Marines",
     ["FPS Boost"] = {
         ["Enable"] = true,
-        ["FPS Cap"] = 10,
+        ["FPS Cap"] = 5,
     },
     ["Farm Boss Drops"] = {
         ["Enable"] = false,
@@ -29,7 +29,7 @@ getgenv().Configs = {
     ["Switch Melee"] = true,
     ["Eat Fruit"] = "", -- leave blank for none, put the fruit name like this example: Smoke Fruit, T-Rex Fruit, ...
     ["Snipe Fruit"] = "Kitsune Fruit", -- leave blank for none, put the fruit name like this example: Smoke Fruit, T-Rex Fruit, ...
-    ["Lock Fragment"] = 20000,
+    ["Lock Fragment"] = 0,
     ["Buy Stuffs"] = true -- buso, geppo, soru, ken haki, ...
 }
 repeat task.wait(1) pcall(function() loadstring(game:HttpGet("https://raw.githubusercontent.com/Xero2409/XeroHub/refs/heads/main/kaitun.lua"))() end) until getgenv().Check_Execute
