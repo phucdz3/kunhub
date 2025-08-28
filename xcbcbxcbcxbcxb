@@ -1,6 +1,6 @@
 UserSettings():GetService("UserGameSettings").MasterVolume = 0
 settings().Rendering.GraphicsMode = 9
-script_key = "R6EZN24D5KD3TIHK433O77X277QMRSXO7HF35KNXXI"
+script_key = "UWDZDMVWQOG25EUC433O77X277QMRSXD6PF35KNXXI"
 getgenv().Shutdown = true -- will shutdown hop when fail
 getgenv().Configs = {
     ["Team"] = "Marines",
