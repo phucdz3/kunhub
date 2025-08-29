@@ -1,23 +1,33 @@
-getgenv().Mode = "OneClick"
-getgenv().Setting = {
-    ["Team"] = "Pirates", -- Options "Pirates", "Marines"
-    ["FucusOnLevel"] = true,
-    ["Fruits"] = {  -- setting for fruits u want
-        ["Primary"] = { -- if current fruit is not in this list, eat/buy
-            "Magma-Magma",
-            -- u can configs add mores/remove and must end with , (comma symbol)
-        },
-        ["Normal"] = { -- it just a normal fruit list
-            "Magma-Magma",
-            -- u can configs add mores/remove and must end with , (comma symbol)
-        }
-        -- run this for get all fruit name `local t={};for _,v in pairs(game.ReplicatedStorage.Remotes.CommF_:InvokeServer("GetFruits"))do table.insert(t,v.Name)end;setclipboard(table.concat(t, "\n"))`
-    },
-    ["Lock Fruits"] = { -- don't use or eat fruits in this list
-        "Yeti-Yeti",
-        "Kitsune-Kitsune"
-    },
-    ["IdleCheck"] = 20, -- every (x) seconds if not moving rejoin
-};
+-- ⚙️ Cấu hình
+local AFKCheckTime = 150 -- số giây check AFK
+local Players = game:GetService("Players")
+local TeleportService = game:GetService("TeleportService")
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/Loader.lua"))()
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+
+local lastPos = hrp.Position
+
+-- Hàm rejoin
+local function Rejoin()
+    TeleportService:Teleport(game.PlaceId, player)
+end
+
+-- Vòng lặp check AFK
+while task.wait(AFKCheckTime) do
+    if not hrp or not hrp.Parent then
+        character = player.Character or player.CharacterAdded:Wait()
+        hrp = character:WaitForChild("HumanoidRootPart")
+        lastPos = hrp.Position
+    else
+        local newPos = hrp.Position
+        if (newPos - lastPos).magnitude < 2 then
+            warn("⚠️ AFK detected, rejoining...")
+            Rejoin()
+            break
+        else
+            lastPos = newPos
+        end
+    end
+end
