@@ -1,24 +1,106 @@
-getgenv().Mode = "OneClick"
-getgenv().Setting = {
-    ["Team"] = "Pirates", -- Options "Pirates", "Marines"
-    ["FucusOnLevel"] = true,
-    ["Fruits"] = {  -- setting for fruits u want
-        ["Primary"] = { -- if current fruit is not in this list, eat/buy
-            "Magma-Magma",
-            "Dragon-Dragon",
-            -- u can configs add mores/remove and must end with , (comma symbol)
-        },
-        ["Normal"] = { -- it just a normal fruit list
-            "Magma-Magma",
-            -- u can configs add mores/remove and must end with , (comma symbol)
+setfpscap(5)
+repeat task.wait() until game:IsLoaded()
+repeat task.wait() until game.Players
+repeat task.wait() until game.Players.LocalPlayer
+repeat task.wait() until game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+_G.Team = "Pirate" -- Marine / Pirate
+getgenv().Script_Mode = "Kaitun_Script"
+_G.MainSettings = {
+    ["EnabledHOP"] = true,
+    ['FPSBOOST'] = true,
+    ["FPSLOCKAMOUNT"] = 5,
+    ['WhiteScreen'] = true,
+    ['CloseUI'] = false,
+    ["NotifycationExPRemove"] = true,
+    ['AFKCheck'] = 150,
+    ["LockFragments"] = 20000,
+    ["LockFruitsRaid"] = {
+        [1] = "Dough-Dough",
+        [2] = "Dragon-Dragon",
+        [3] = "Leopard-Leopard",
+        [4] = "Gas-Gas",
+        [5] = "Yeti-Yeti",
+        [6] = "Kitsune-Kitsune",
+        [7] = "Lightning-Lightning"
+    }
+}
+_G.SharkAnchor_Settings = {
+    ["Enabled_Farm"] = false,
+    ['FarmAfterMoney'] = 2500000
+}
+_G.Quests_Settings = {        
+    ['Rainbow_Haki'] = true,
+    ["MusketeerHat"] = true,
+    ["PullLever"] = false,
+    ['DoughQuests_Mirror'] = {
+        ['Enabled'] = false,
+        ['UseFruits'] = false
+    }        
+}
+_G.Races_Settings = {
+    ['Race'] = {
+        ['EnabledEvo'] = false,
+        ["v2"] = true,
+        ["v3"] = true,
+        ["Races_Lock"] = {
+            ["Races"] = {
+                ["Mink"] = true,
+                ["Human"] = true,
+                ["Fishman"] = true
+            },
+            ["RerollsWhenFragments"] = 20000
         }
-        -- run this for get all fruit name `local t={};for _,v in pairs(game.ReplicatedStorage.Remotes.CommF_:InvokeServer("GetFruits"))do table.insert(t,v.Name)end;setclipboard(table.concat(t, "\n"))`
-    },
-    ["Lock Fruits"] = { -- don't use or eat fruits in this list
-        "Yeti-Yeti",
-        "Kitsune-Kitsune"
-    },
-    ["IdleCheck"] = 50, -- every (x) seconds if not moving rejoin
-};
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/Loader.lua"))()
+    }
+}
+_G.Fruits_Settings = {
+    ['Main_Fruits'] = {'Magma-Magma'},
+    ['Select_Fruits'] = {"Flame-Flame", "Ice-Ice", "Quake-Quake", "Light-Light", "Dark-Dark", "Spider-Spider", "Rumble-Rumble", "Magma-Magma"}
+}
+_G.Settings_Melee = {
+    ['Superhuman'] = true,
+    ['DeathStep'] = true,
+    ['SharkmanKarate'] = true,
+    ['ElectricClaw'] = true,
+    ['DragonTalon'] = true,
+    ['Godhuman'] = true
+}
+_G.SwordSettings = {
+    ['Saber'] = true,
+    ["Pole"] = false,
+    ['MidnightBlade'] = false,
+    ['Shisui'] = false,
+    ['Saddi'] = false,
+    ['Wando'] = false,
+    ['Yama'] = true,
+    ['Rengoku'] = false,
+    ['Canvander'] = false,
+    ['BuddySword'] = false,
+    ['TwinHooks'] = false,
+    ['HallowScryte'] = false,
+    ['TrueTripleKatana'] = false,
+    ['CursedDualKatana'] = false
+}
+_G.GunSettings = {
+    ['Kabucha'] = false,
+    ['SerpentBow'] = false,
+    ['SoulGuitar'] = false
+}
+_G.FarmMastery_Settings = {
+    ['Melee'] = true,
+    ['Sword'] = false,
+    ['DevilFruits'] = false,
+    ['Select_Swords'] = {
+        ["AutoSettings"] = false,
+        ["ManualSettings"] = {
+            "Saber",
+            "Buddy Sword"
+        }
+    }
+}
+_G.Hop_Settings = {
+    ["Find Tushita"] = false
+}
+getgenv().Key = "MARU-8ICJ-6URTS-5TIF-0J3XA-4HSP"
+getgenv().id = "1198977158337540131"
+getgenv().Script_Mode = "Kaitun_Script"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
