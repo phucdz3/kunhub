@@ -100,7 +100,7 @@ _G.FarmMastery_Settings = {
 _G.Hop_Settings = {
     ["Find Tushita"] = false
 }
-getgenv().Key = "MARU-8ICJ-6URTS-5TIF-0J3XA-4HSP"
-getgenv().id = "1198977158337540131"
+getgenv().Key = "MARU-QMS2M-OROY1-KFWW-0VTSR-C9AL"
+getgenv().id = "1101827732343640144"
 getgenv().Script_Mode = "Kaitun_Script"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
