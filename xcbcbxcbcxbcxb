@@ -6,7 +6,7 @@ getgenv().Shutdown = true -- will shutdown hop when fail
 getgenv().Configs = {
     ["Team"] = "Marines",
     ["FPS Boost"] = {
-        ["Enable"] = true,
+        ["Enable"] = false,
         ["FPS Cap"] = 5,
     },
     ["Farm Boss Drops"] = {
