@@ -1,4 +1,4 @@
-setfpscap(5)
+setfpscap(20)
 repeat task.wait() until game:IsLoaded()
 repeat task.wait() until game.Players
 repeat task.wait() until game.Players.LocalPlayer
@@ -8,7 +8,7 @@ getgenv().Script_Mode = "Kaitun_Script"
 _G.MainSettings = {
     ["EnabledHOP"] = true,
     ['FPSBOOST'] = true,
-    ["FPSLOCKAMOUNT"] = 5,
+    ["FPSLOCKAMOUNT"] = 20,
     ['WhiteScreen'] = true,
     ['CloseUI'] = false,
     ["NotifycationExPRemove"] = true,
