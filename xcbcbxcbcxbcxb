@@ -1,3 +1,4 @@
+setfpscap(5)
 UserSettings():GetService("UserGameSettings").MasterVolume = 0
 settings().Rendering.GraphicsMode = 9
 script_key = "XWQZDL46TSHL5I5A433O77X277QMRSXA6LF35KNXXI"
