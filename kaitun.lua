@@ -9,7 +9,6 @@ local rest_time = 300  -- Thời gian nghỉ trước khi tiếp tục spam (gi�
 -- Danh sách tin nhắn ngẫu nhiên để tránh bị phát hiện
 local messages = {
     "🔥 Cheap fruits at saleroblox n e t 🍎",
-    "💎 Best deals only at saleroblox n e t 💰",
 }
 
 -- Lấy dịch vụ chat mới
