@@ -1,5 +1,7 @@
 -- GUI hiển thị trạng thái Race Draco
 local player = game.Players.LocalPlayer
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local CommF = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("CommF_")
 
 -- Tạo ScreenGui
 local screenGui = Instance.new("ScreenGui")
@@ -28,7 +30,7 @@ nameLabel.TextXAlignment = Enum.TextXAlignment.Left
 nameLabel.Text = "Tên: Đang tải..."
 nameLabel.Parent = frame
 
--- Label trạng thái train
+-- Label trạng thái Draco
 local statusLabel = Instance.new("TextLabel")
 statusLabel.Size = UDim2.new(1, -20, 0.5, -5)
 statusLabel.Position = UDim2.new(0, 10, 0.5, 0)
@@ -40,36 +42,62 @@ statusLabel.TextXAlignment = Enum.TextXAlignment.Left
 statusLabel.Text = "Draco: Đang kiểm tra..."
 statusLabel.Parent = frame
 
+-- Hàm check có phải Draco đã evolve chưa
+local function IsDraco()
+    local data = player:FindFirstChild("Data")
+    if not data then return false end
+
+    local race = data:FindFirstChild("Race")
+    if not race then return false end
+
+    if not race:FindFirstChild("Evolved") then return false end
+
+    return race.Value == "Draco"
+end
+
 -- Hàm kiểm tra Race Draco
 local function CheckRaceDracoStatus()
-    if not player.Character then
-        return "Không tìm thấy nhân vật."
+    if not IsDraco() then
+        return "Bạn không phải Race Draco hoặc chưa thức tỉnh Draco."
     end
 
-    -- Nếu game của bạn có cách check Draco khác thì sửa dòng bên dưới:
-    -- Ví dụ: ("UpgradeDraco", "Check") hoặc ("DracoRace", "Check") tùy game
-    local status, current, fragment = game.ReplicatedStorage.Remotes.CommF_:InvokeServer("UpgradeDraco", "Check")
+    -- Gọi đúng remote TempleClock, dựa theo script bạn gửi
+    local ok, info = pcall(function()
+        return CommF:InvokeServer("TempleClock", "Check")
+    end)
 
-    if status == nil then
+    if not ok or type(info) ~= "table" or info.Race ~= "Draco" then
         return "Không đọc được dữ liệu Draco."
     end
 
-    -- Map giống Race V4 nhưng đổi text sang Draco
-    if status == 1 or status == 3 then
-        return "Bạn cần train Draco thêm."
-    elseif status == 2 or status == 4 or status == 7 then
-        return "Có thể mua Draco Gear với " .. tostring(fragment) .. " mảnh."
-    elseif status == 5 then
-        return "Bạn đã hoàn thành Draco."
-    elseif status == 6 then
-        return "Đã nâng Draco: " .. tostring(current - 2) .. "/3. Cần train thêm."
-    elseif status == 8 then
-        return "Còn " .. tostring(10 - current) .. " buổi train Draco."
-    elseif status == 0 then
-        return "Sẵn sàng làm Draco Trial."
+    local level   = tonumber(info.RaceLevel) or 0
+    local hadPoint = info.HadPoint == true
+
+    local details = info.RaceDetails or {}
+    local A = tonumber(details.A) or 0          -- số ember Alpha
+    local B = tonumber(details.B) or 0          -- số ember Omega
+    local C = tonumber(details.C) or 0          -- Energy Training tier (Gear5)
+    local totalEmber = math.clamp(A + B, 0, 3)  -- tối đa 3 ember
+
+    -- Ghép text hiển thị
+    local parts = {}
+
+    table.insert(parts, ("Lv.%d"):format(level))
+    table.insert(parts, ("Ember: %d/3 (A:%d | O:%d)"):format(totalEmber, A, B))
+
+    if C > 0 then
+        table.insert(parts, ("Energy Training: Tier %d"):format(C))
     else
-        return "Không đọc được dữ liệu Draco."
+        table.insert(parts, "Energy Training: Chưa mở")
     end
+
+    if hadPoint then
+        table.insert(parts, "Đang có điểm để đổi ember.")
+    else
+        table.insert(parts, "Không có điểm đổi ember.")
+    end
+
+    return table.concat(parts, " | ")
 end
 
 -- Hàm cập nhật GUI
@@ -80,7 +108,7 @@ local function UpdateDracoGUI()
     if success then
         statusLabel.Text = "Draco: " .. result
     else
-        statusLabel.Text = "Draco: Không đọc được dữ liệu"
+        statusLabel.Text = "Draco: Không đọc được dữ liệu Draco."
     end
 end
 
