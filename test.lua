@@ -1,106 +1,96 @@
-setfpscap(20)
-repeat task.wait() until game:IsLoaded()
-repeat task.wait() until game.Players
-repeat task.wait() until game.Players.LocalPlayer
-repeat task.wait() until game.Players.LocalPlayer:FindFirstChild("PlayerGui")
-_G.Team = "Pirate" -- Marine / Pirate
-getgenv().Script_Mode = "Kaitun_Script"
-_G.MainSettings = {
-    ["EnabledHOP"] = true,
-    ['FPSBOOST'] = true,
-    ["FPSLOCKAMOUNT"] = 20,
-    ['WhiteScreen'] = true,
-    ['CloseUI'] = false,
-    ["NotifycationExPRemove"] = true,
-    ['AFKCheck'] = 150,
-    ["LockFragments"] = 20000,
-    ["LockFruitsRaid"] = {
-        [1] = "Dough-Dough",
-        [2] = "Dragon-Dragon",
-        [3] = "Leopard-Leopard",
-        [4] = "Gas-Gas",
-        [5] = "Yeti-Yeti",
-        [6] = "Kitsune-Kitsune",
-        [7] = "Lightning-Lightning"
-    }
-}
-_G.SharkAnchor_Settings = {
-    ["Enabled_Farm"] = false,
-    ['FarmAfterMoney'] = 2500000
-}
-_G.Quests_Settings = {        
-    ['Rainbow_Haki'] = true,
-    ["MusketeerHat"] = true,
-    ["PullLever"] = false,
-    ['DoughQuests_Mirror'] = {
-        ['Enabled'] = false,
-        ['UseFruits'] = false
-    }        
-}
-_G.Races_Settings = {
-    ['Race'] = {
-        ['EnabledEvo'] = false,
-        ["v2"] = true,
-        ["v3"] = true,
-        ["Races_Lock"] = {
-            ["Races"] = {
-                ["Mink"] = true,
-                ["Human"] = true,
-                ["Fishman"] = true
-            },
-            ["RerollsWhenFragments"] = 20000
-        }
-    }
-}
-_G.Fruits_Settings = {
-    ['Main_Fruits'] = {'Magma-Magma'},
-    ['Select_Fruits'] = {"Flame-Flame", "Ice-Ice", "Quake-Quake", "Light-Light", "Dark-Dark", "Spider-Spider", "Rumble-Rumble", "Magma-Magma"}
-}
-_G.Settings_Melee = {
-    ['Superhuman'] = true,
-    ['DeathStep'] = true,
-    ['SharkmanKarate'] = true,
-    ['ElectricClaw'] = true,
-    ['DragonTalon'] = true,
-    ['Godhuman'] = true
-}
-_G.SwordSettings = {
-    ['Saber'] = true,
-    ["Pole"] = false,
-    ['MidnightBlade'] = false,
-    ['Shisui'] = false,
-    ['Saddi'] = false,
-    ['Wando'] = false,
-    ['Yama'] = true,
-    ['Rengoku'] = false,
-    ['Canvander'] = false,
-    ['BuddySword'] = false,
-    ['TwinHooks'] = false,
-    ['HallowScryte'] = false,
-    ['TrueTripleKatana'] = false,
-    ['CursedDualKatana'] = false
-}
-_G.GunSettings = {
-    ['Kabucha'] = false,
-    ['SerpentBow'] = false,
-    ['SoulGuitar'] = false
-}
-_G.FarmMastery_Settings = {
-    ['Melee'] = true,
-    ['Sword'] = false,
-    ['DevilFruits'] = false,
-    ['Select_Swords'] = {
-        ["AutoSettings"] = false,
-        ["ManualSettings"] = {
-            "Saber",
-            "Buddy Sword"
-        }
-    }
-}
-_G.Hop_Settings = {
-    ["Find Tushita"] = false
-}
-getgenv().Key = "MARU-QMS2M-OROY1-KFWW-0VTSR-C9AL"
-getgenv().id = "1101827732343640144"
-getgenv().Script_Mode = "Kaitun_Script"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
+-- GUI hiển thị trạng thái Race Draco
+local player = game.Players.LocalPlayer
+
+-- Tạo ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "RaceDracoStatusGUI"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+-- Tạo khung viền (Frame)
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 330, 0, 60)
+frame.Position = UDim2.new(0.5, -165, 0, 20) -- giữa màn hình, phía trên
+frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
+frame.BorderSizePixel = 2
+frame.Parent = screenGui
+
+-- Label tên người chơi
+local nameLabel = Instance.new("TextLabel")
+nameLabel.Size = UDim2.new(1, -20, 0.5, -5)
+nameLabel.Position = UDim2.new(0, 10, 0, 5)
+nameLabel.BackgroundTransparency = 1
+nameLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
+nameLabel.TextScaled = true
+nameLabel.Font = Enum.Font.GothamBold
+nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+nameLabel.Text = "Tên: Đang tải..."
+nameLabel.Parent = frame
+
+-- Label trạng thái train
+local statusLabel = Instance.new("TextLabel")
+statusLabel.Size = UDim2.new(1, -20, 0.5, -5)
+statusLabel.Position = UDim2.new(0, 10, 0.5, 0)
+statusLabel.BackgroundTransparency = 1
+statusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+statusLabel.TextScaled = true
+statusLabel.Font = Enum.Font.GothamBold
+statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+statusLabel.Text = "Draco: Đang kiểm tra..."
+statusLabel.Parent = frame
+
+-- Hàm kiểm tra Race Draco
+local function CheckRaceDracoStatus()
+    if not player.Character then
+        return "Không tìm thấy nhân vật."
+    end
+
+    -- Nếu game của bạn có cách check Draco khác thì sửa dòng bên dưới:
+    -- Ví dụ: ("UpgradeDraco", "Check") hoặc ("DracoRace", "Check") tùy game
+    local status, current, fragment = game.ReplicatedStorage.Remotes.CommF_:InvokeServer("UpgradeDraco", "Check")
+
+    if status == nil then
+        return "Không đọc được dữ liệu Draco."
+    end
+
+    -- Map giống Race V4 nhưng đổi text sang Draco
+    if status == 1 or status == 3 then
+        return "Bạn cần train Draco thêm."
+    elseif status == 2 or status == 4 or status == 7 then
+        return "Có thể mua Draco Gear với " .. tostring(fragment) .. " mảnh."
+    elseif status == 5 then
+        return "Bạn đã hoàn thành Draco."
+    elseif status == 6 then
+        return "Đã nâng Draco: " .. tostring(current - 2) .. "/3. Cần train thêm."
+    elseif status == 8 then
+        return "Còn " .. tostring(10 - current) .. " buổi train Draco."
+    elseif status == 0 then
+        return "Sẵn sàng làm Draco Trial."
+    else
+        return "Không đọc được dữ liệu Draco."
+    end
+end
+
+-- Hàm cập nhật GUI
+local function UpdateDracoGUI()
+    nameLabel.Text = "Tên: " .. player.Name
+
+    local success, result = pcall(CheckRaceDracoStatus)
+    if success then
+        statusLabel.Text = "Draco: " .. result
+    else
+        statusLabel.Text = "Draco: Không đọc được dữ liệu"
+    end
+end
+
+-- Cập nhật ban đầu
+UpdateDracoGUI()
+
+-- Cập nhật tự động mỗi 10 giây
+task.spawn(function()
+    while true do
+        task.wait(10)
+        UpdateDracoGUI()
+    end
+end)
