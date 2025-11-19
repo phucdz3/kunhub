@@ -8,7 +8,7 @@ local rest_time = 300  -- Thời gian nghỉ trước khi tiếp tục spam (gi�
 
 -- Danh sách tin nhắn ngẫu nhiên để tránh bị phát hiện
 local messages = {
-    "🔥 Cheap fruits tiger kitsune yeti Kunblox n e t 🍎",
+    "🔥 Cheap fruits Tiger Kitsune Yeti Kunblox n e t 🍎",
 }
 
 -- Lấy dịch vụ chat mới
