@@ -1,5 +1,5 @@
 repeat
-    task.wait(2)
+    task.wait(1)
 until game:IsLoaded()
 task.spawn(function()
 end)
@@ -38,7 +38,7 @@ game:GetService('CoreGui').RobloxPromptGui.promptOverlay.ChildAdded:Connect(Chec
                 -- Melees
                 AutoFullyMelees = true,
                 -- Swords
-                Saber = false,
+                Saber = true,
                 CursedDualKatana = false,
                 -- Guns
                 SoulGuitar = true,
@@ -5161,20 +5161,27 @@ game:GetService('CoreGui').RobloxPromptGui.promptOverlay.ChildAdded:Connect(Chec
         )
 
         local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
-        local CHECK_DELAY = 10 * 60 
+        local COOLDOWN = 2 * 60 * 60
+        local lastRandom = 0
 
         local function AutoRandomFruitLoop()
             while true do
-                pcall(function()
-                    if AddPoint then
-                        AddPoint()
-                    end
+                local now = os.time()
 
-                    local result = Remotes.CommF_:InvokeServer("Cousin", "Buy")
-                    print("[Random Fruit]:", result)
-                end)
+                if lastRandom == 0 or (now - lastRandom) >= COOLDOWN then
+                    pcall(function()
+                        if AddPoint then
+                            AddPoint()
+                        end
 
-                task.wait(CHECK_DELAY)
+                        local result = Remotes.CommF_:InvokeServer("Cousin", "Buy")
+                        print("[Random Fruit]:", result)
+                    end)
+
+                    lastRandom = os.time()
+                end
+
+                task.wait(10)
             end
         end
 
