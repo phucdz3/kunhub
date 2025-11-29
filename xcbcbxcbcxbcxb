@@ -1,5 +1,5 @@
 repeat
-    task.wait(0.5)
+    task.wait(2)
 until game:IsLoaded()
 task.spawn(function()
 end)
@@ -41,7 +41,7 @@ game:GetService('CoreGui').RobloxPromptGui.promptOverlay.ChildAdded:Connect(Chec
                 Saber = false,
                 CursedDualKatana = false,
                 -- Guns
-                SoulGuitar = false,
+                SoulGuitar = true,
                 -- Upgrades
 
                 RaceV2 = false,
